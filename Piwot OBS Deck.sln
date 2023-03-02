@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Piwot OBS Deck", "Piwot OBS Deck\Piwot OBS Deck.csproj", "{82C3A813-9329-4FE4-9A6C-B1BCC0D66F50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82C3A813-9329-4FE4-9A6C-B1BCC0D66F50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82C3A813-9329-4FE4-9A6C-B1BCC0D66F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82C3A813-9329-4FE4-9A6C-B1BCC0D66F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82C3A813-9329-4FE4-9A6C-B1BCC0D66F50}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7006C6BF-1A68-4670-8B3D-4BBB0DE1FFC0}
+	EndGlobalSection
+EndGlobal
