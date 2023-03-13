@@ -8,13 +8,6 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Button Content="Connect to OBS" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="27" Width="145" Name="ButtonConnect" Click="ButtonConnect_Click"/>
-        <RichTextBox Margin="274,10,211,397">
-            <FlowDocument>
-                <Paragraph>
-                    <Run Text="RichTextBox"/>
-                </Paragraph>
-            </FlowDocument>
-        </RichTextBox>
 
     </Grid>
 </Window>
