@@ -16,7 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="obs-websocket-dotnet" Version="5.0.0.3" />
+    <PackageReference Include="System.Speech" Version="8.0.0" />
+    <PackageReference Include="WebTTS.GoogleTranslate" Version="1.0.6235.19054" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,7 +38,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <ProjectReference Include="..\..\PiwotOBS\PiwotOBS\PiwotOBS.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\voiceDownloader.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

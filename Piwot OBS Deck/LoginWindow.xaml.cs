@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PiwotOBS;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,14 +33,14 @@ namespace PiwotOBSDeck
         {
             Loaded += ToolWindow_Loaded;
             InitializeComponent();
-            OBSDeck.client.Connected += new EventHandler(OnConnected);
+            OBSDeck.OBS.Connected += new EventHandler(OnConnected);
             SavedCredentials = Storage.LoadSettings("StoredCredentials");
             if(SavedCredentials != null )
             {
-                TextBox_IP.Text = SavedCredentials.GetVal("IP", "0.0.0.0");
-                TextBox_Port.Text = SavedCredentials.GetVal("port", 4455).ToString();
-                TextBox_Password.Password = SavedCredentials.GetVal("password", "");
-                CheckBox_Remember.IsChecked = SavedCredentials.GetVal("remember", false);
+                TextBox_IP.Text = SavedCredentials.GetVal<string>("IP", "0.0.0.0");
+                TextBox_Port.Text = SavedCredentials.GetVal<int>("port", 4455).ToString();
+                TextBox_Password.Password = SavedCredentials.GetVal<string>("password", "");
+                CheckBox_Remember.IsChecked = SavedCredentials.GetVal<bool>("remember", false);
             }
         }
 
@@ -52,27 +53,30 @@ namespace PiwotOBSDeck
 
         private void OnConnected(object? sender, EventArgs e)
         {
-            //try
-            //{
-                
-            //}catch (Exception ex) { Console.WriteLine(ex.ToString()); } 
-            Dispatcher.Invoke(new Action(() => {
+            var act = new Action(() =>
+            {
                 try
                 {
                     SavedCredentials = new SettingsBatch();
+
                     SavedCredentials["remember"] = CheckBox_Remember.IsChecked ?? false;
                     if (CheckBox_Remember.IsChecked ?? false)
                     {
                         SavedCredentials["IP"] = TextBox_IP.Text;
                         SavedCredentials["port"] = int.Parse(TextBox_Port.Text);
                         SavedCredentials["password"] = TextBox_Password.Password;
-                    }
+
+                    };
                     SavedCredentials.Save(Storage.GetSettingsFilename("StoredCredentials"));
-                    Close();
                 }
-                catch (Exception ex) { Console.WriteLine(ex.ToString()); }
-                return;
-            }));
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                Close();
+            });
+            Dispatcher.Invoke(act);
+            
             
         }
 
@@ -83,7 +87,7 @@ namespace PiwotOBSDeck
 
         private void ButtonLogin_Click(object sender, RoutedEventArgs e)
         {
-            OBSDeck.ConnectToOBS(TextBox_IP.Text, TextBox_Port.Text, TextBox_Password.Password);
+            OBSDeck.Connect(TextBox_IP.Text, TextBox_Port.Text, TextBox_Password.Password);
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -96,7 +100,7 @@ namespace PiwotOBSDeck
         {
             if(e.Key == Key.Enter)
             {
-                OBSDeck.ConnectToOBS(TextBox_IP.Text, TextBox_Port.Text, TextBox_Password.Password);
+                OBSDeck.Connect(TextBox_IP.Text, TextBox_Port.Text, TextBox_Password.Password);
             }
         }
     }
