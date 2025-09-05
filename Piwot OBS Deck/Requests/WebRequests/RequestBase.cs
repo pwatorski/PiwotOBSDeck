@@ -4,8 +4,10 @@ using System.Text;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Drawing.Printing;
+using System;
 
-namespace PiwotOBSDeck.Donations.WebRequests
+namespace PiwotOBSDeck.WebServices.WebRequests
 {
     public class RequestBase
     {
@@ -15,7 +17,7 @@ namespace PiwotOBSDeck.Donations.WebRequests
         public string Author { get; set; }
         [JsonIgnore]
         public RequestType Type { get; set; }
-        public enum RequestType { Empty, Greeting, Status, Ping, Pong, Donation, ReciveAcknowledgement }
+        public enum RequestType { Empty, Greeting, Status, Ping, Pong, Donation, ReciveAcknowledgement, SteamAchievement, VCPresence }
 
         public RequestBase(string type = "empty", string author = "OBSDeck")
         {
@@ -82,6 +84,10 @@ namespace PiwotOBSDeck.Donations.WebRequests
                     return jsonObject.Deserialize<DonationRequest>();
                 case "recivAck":
                     return jsonObject.Deserialize<ReciveAcknowledgementRequest>();
+                case "steamAch":
+                    return jsonObject.Deserialize<SteamAchievementRequest>();
+                case "voiceList":
+                    return jsonObject.Deserialize<VCPresenceUpdateRequest>();
                 default: return null;
             }
         }

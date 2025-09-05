@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PiwotOBSDeck.Donations
+namespace PiwotOBSDeck.Requests.Events
 {
     public class OnDonationShownEventArgs:EventArgs
     {

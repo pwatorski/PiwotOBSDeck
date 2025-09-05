@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <RootNamespace>PiwotOBSDeck</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
@@ -16,9 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Requests\Events\OnSteamAchievementEventArgs.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="NAudio" Version="2.2.1" />
-    <PackageReference Include="obs-websocket-dotnet" Version="5.0.0.3" />
-    <PackageReference Include="System.Speech" Version="8.0.0" />
+    <PackageReference Include="obs-websocket-dotnet" Version="5.0.1" />
+    <PackageReference Include="System.Speech" Version="9.0.8" />
     <PackageReference Include="WebTTS.GoogleTranslate" Version="1.0.6235.19054" />
   </ItemGroup>
 

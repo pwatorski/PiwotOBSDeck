@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using System.Text.Json;
 
-namespace PiwotOBSDeck.Donations.WebRequests
+namespace PiwotOBSDeck.WebServices.WebRequests
 {
     public class GreetingRequest : RequestBase
     {

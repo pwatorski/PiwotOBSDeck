@@ -13,12 +13,14 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using PiwotOBSDeck.Donations.Events;
-using PiwotOBSDeck.Donations;
+using PiwotOBSDeck.WebServices.Events;
+using PiwotOBSDeck.WebServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Newtonsoft.Json.Linq;
+using PiwotOBSDeck.Requests;
+using PiwotOBSDeck.Requests.Events;
 
 namespace PiwotOBSDeck
 {
@@ -31,14 +33,21 @@ namespace PiwotOBSDeck
         SceneItem JumpscareImage;
         SceneItem JumpscareImage2;
         SceneItem JumpscareSound;
+        SceneItem PoczekaShrek;
         FrameAnimation beerAnim;
         Animator Animator = new Animator(30);
         DVDPong DVDPong;
-        DonationRecieverService DonationRecService;
+        RequestRecieverService RequestRecService;
+        List<string> vcPresenceScenes;
         List<string> donationScenes;
         List<string> donationTextItems;
+        List<string> achievementScenes;
+        List<string> achievementBackgroundImageItems;
+        List<string> achievementIconImageItems;
         List<string> goalScenes;
         List<string> goalTextItems;
+        List<string> avatarScenes;
+        List<string> avatarSceneItems;
         List<string> goalBarItems;
         public readonly Color ConnectedColor = Colors.LightGreen;
         public readonly Color ConnectingColor = Colors.Cyan;
@@ -71,6 +80,38 @@ namespace PiwotOBSDeck
                 comboBox_donationTexts.SelectedIndex = 0;
             }
 
+            if (Settings.AchievementSceneName != null)
+            {
+                achievementScenes = new List<string>()
+                {
+                    Settings.AchievementSceneName
+                };
+                comboBox_achievementScenes1.ItemsSource = achievementScenes;
+                comboBox_achievementScenes1.SelectedIndex = 0;
+            }
+
+
+            if (Settings.AchievementBackgroundItemName != null)
+            {
+                achievementBackgroundImageItems = new List<string>()
+                {
+                    Settings.AchievementBackgroundItemName
+                };
+                comboBox_achBackground1.ItemsSource = achievementBackgroundImageItems;
+                comboBox_achBackground1.SelectedIndex = 0;
+            }
+
+            if (Settings.AchievementIconItemName != null)
+            {
+                achievementIconImageItems = new List<string>()
+                {
+                    Settings.AchievementIconItemName
+                };
+                comboBox_achIcon1.ItemsSource = achievementIconImageItems;
+                comboBox_achIcon1.SelectedIndex = 0;
+            }
+
+
             if (Settings.GoalSceneName != null)
             {
                 goalScenes = new List<string>()
@@ -101,6 +142,27 @@ namespace PiwotOBSDeck
                 comboBox_goalBar.SelectedIndex = 0;
             }
 
+            if (Settings.AvatarSceneName != null)
+            {
+                avatarScenes = new List<string>()
+                {
+                    Settings.AvatarSceneName
+                };
+                comboBox_avatarScenes.ItemsSource = avatarScenes;
+                comboBox_avatarScenes.SelectedIndex = 0;
+            }
+
+            if (Settings.VCPresenceSceneName != null)
+            {
+                vcPresenceScenes = new List<string>()
+                {
+                    Settings.VCPresenceSceneName
+                };
+                comboBox_vcPresenceScenes.ItemsSource = vcPresenceScenes;
+                comboBox_vcPresenceScenes.SelectedIndex = 0;
+            }
+
+
             textBox_dvdSpeed.Text = $"{Settings.DVDSpeed}";
             checkBox_enableMultilang.IsChecked = Settings.MultilangEnabled;
 
@@ -112,16 +174,39 @@ namespace PiwotOBSDeck
             var hLine = new SerieHLine(0, 1, Colors.Yellow);
             VoiceDisplay.AddElement(hLine);
             VoiceCenter.VolumeUpdate += (x, volumes) => { hLine.X = volumes.Item1; };
-            DonationRecService = new DonationRecieverService();
-            DonationRecService.OnClientConnected += DonationRecService_OnClientConnected;
-            DonationRecService.OnClientDisconnected += DonationRecService_OnClientDisconnected;
-            DonationRecService.OnDonation += DonationRecService_OnDonation;
-            DonationRecService.OnConnectionFail += DonationRecService_OnConnectionFail;
+            RequestRecService = new RequestRecieverService();
+            RequestRecService.OnClientConnected += RequestRecService_OnClientConnected;
+            RequestRecService.OnClientDisconnected += RequestRecService_OnClientDisconnected;
+            RequestRecService.OnDonation += RequestRecService_OnDonation;
+            RequestRecService.OnSteamAchievement += RequestRecService_OnSteamAchievement;
+            RequestRecService.OnConnectionFail += RequestRecService_OnConnectionFail;
+            RequestRecService.OnVCPresenceUpdate += RequestRecService_OnVCPresenceUpdate;
             //VoiceDisplay.AddElement(new SerieWatcher(() => new float[] { VoiceCenter.CurrentVolume, VoiceCenter.CurrentVolume }, 1, segments:1, lineThickness: 1, color: Colors.Yellow));
             
             DonationDispatcher.Start();
             DonationDispatcher.OnDonationAdded += DonationDispatcher_OnDonationAdded;
             DonationDispatcher.OnDonationShown += DonationDispatcher_OnDonationShown;
+            SteamAchievementDispatcher.Start();
+           
+        }
+
+        private void RequestRecService_OnVCPresenceUpdate(object? sender, OnVCPresenceUpdateEventArgs e)
+        {
+            VCPresenceControler.UpdatePresence(e.Request);
+            var enablesStatus = VCPresenceControler.Enabled ? "Enabled" : "Disabled";
+            var curViewersText = $"{e.Request.Ids.Length}";
+            var lastUpdate = VCPresenceControler.LastUpdate.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss.ff");
+            Dispatcher.InvokeAsync(new Action(() =>
+            {
+                textBlock_VCPresenceCurViewers.Text = curViewersText;
+                textBlock_VCPresenceStatus.Text = enablesStatus;
+                textBlock_VCPresenceLastUpdate.Text = lastUpdate;
+            }));
+        }
+
+        private void RequestRecService_OnSteamAchievement(object? sender, OnSteamAchievementEventArgs e)
+        {
+            SteamAchievementDispatcher.AddAchievement(SteamAchievementRequest.FromWebRequest(e.SteamAchievementRequest));
         }
 
         private void DonationDispatcher_OnDonationShown(object? sender, OnDonationShownEventArgs e)
@@ -143,14 +228,14 @@ namespace PiwotOBSDeck
             }));
         }
 
-        private void DonationRecService_OnConnectionFail(object? sender, EventArgs e)
+        private void RequestRecService_OnConnectionFail(object? sender, EventArgs e)
         {
             Dispatcher.InvokeAsync(new Action(() => {
                 textBlock_DonationConnectionStatus.Text = "disconnected";
             }));
         }
 
-        private void DonationRecService_OnClientDisconnected(object? sender, OnDonationClientDisconnectedEventArgs e)
+        private void RequestRecService_OnClientDisconnected(object? sender, OnRequestClientDisconnectedEventArgs e)
         {
             Dispatcher.InvokeAsync(new Action(() => {
                 textBlock_DonationConnectionStatus.Text = "disconnected";
@@ -159,7 +244,7 @@ namespace PiwotOBSDeck
             }));
         }
 
-        private void DonationRecService_OnDonation(object? sender, OnDonationEventArgs e)
+        private void RequestRecService_OnDonation(object? sender, OnDonationEventArgs e)
         {
             DonationDispatcher.AddDonation(DonationRequest.FromWebRequest(e.DonationRequest));
             /*Dispatcher.InvokeAsync(new Action(() => {
@@ -170,7 +255,7 @@ namespace PiwotOBSDeck
             
         }
 
-        private void DonationRecService_OnClientConnected(object? sender, OnDonationClientConnectedEventArgs e)
+        private void RequestRecService_OnClientConnected(object? sender, OnRequestClientConnectedEventArgs e)
         {
             Dispatcher.InvokeAsync(new Action(() => {
                 textBlock_DonationConnectionStatus.Text = "connected";
@@ -181,9 +266,10 @@ namespace PiwotOBSDeck
 
         private void OnConnected(object? sender, EventArgs e)
         {
-            Dispatcher.InvokeAsync(new Action(() =>
+            Console.WriteLine("Connected");
+            DispatcherOperation? dispatcherOperation = Dispatcher.InvokeAsync(new Action(() =>
             {
-                Console.WriteLine("Connected");
+                Console.WriteLine("Dispatcher 1 started.");
                 try
                 {
                     this.Icon = Imaging.CreateBitmapSourceFromHIcon(
@@ -197,10 +283,30 @@ namespace PiwotOBSDeck
                     donationScenes = OBSDeck.GetSceneList().Select(x => x.Name).ToList();
                     comboBox_donationScenes.ItemsSource = donationScenes;
                     comboBox_donationScenes.Items.Refresh();
+                    Console.WriteLine("Donations refreshed.");
 
                     goalScenes = OBSDeck.GetSceneList().Select(x => x.Name).ToList();
                     comboBox_goalnScenes.ItemsSource = goalScenes;
                     comboBox_goalnScenes.Items.Refresh();
+                    Console.WriteLine("Goal refreshed.");
+
+                    avatarScenes = OBSDeck.GetSceneList().Select(x => x.Name).ToList();
+                    comboBox_avatarScenes.ItemsSource = avatarScenes;
+                    comboBox_avatarScenes.Items.Refresh();
+                    Console.WriteLine("Avatar refreshed.");
+
+                    achievementScenes = OBSDeck.GetSceneList().Select(x => x.Name).ToList();
+                    Console.WriteLine(string.Join(", ", achievementScenes));
+                    comboBox_achievementScenes1.ItemsSource = achievementScenes;
+                    comboBox_achievementScenes1.Items.Refresh();
+                    Console.WriteLine("Achievements refreshed.");
+
+                    vcPresenceScenes = OBSDeck.GetSceneList().Select(x => x.Name).ToList();
+                    Console.WriteLine(string.Join(", ", vcPresenceScenes));
+                    comboBox_vcPresenceScenes.ItemsSource = vcPresenceScenes;
+                    comboBox_vcPresenceScenes.Items.Refresh();
+                    Console.WriteLine("VC presence refreshed.");
+
 
                     groupBox_connectionsOBS.BorderBrush = new SolidColorBrush(ConnectedColor);
                     groupBox_connectionsOBS.Background = new SolidColorBrush(ConnectedBackColor);
@@ -212,26 +318,53 @@ namespace PiwotOBSDeck
 
                 groupBox_Trash.IsEnabled = true;
                 groupBox_VTuber.IsEnabled = true;
+                groupBox_achievementPopupMain.IsEnabled = true;
+                groupBox_DonationsMain.IsEnabled = true;
+                groupBox_VCPresenceMain.IsEnabled = true;
+
+                Console.WriteLine("Loaded basic objects.");
 
             }));
-
+            dispatcherOperation.Wait();
             OBSStructure.Init();
+            Console.WriteLine("Init done.");
             /*Avatar = new Avatar("XD_FACE_AVATAR", "BOB_NO_FACE")
             {
                 Name = "BASIC_XD_BOB"
             };*/
             Avatar = Avatar.FromSave(Path.Combine(Settings.StoragePath_Avatars, "BASIC_XD_BOB"));
             Avatar.Reset();
+            Console.WriteLine("Avatar reset.");
+            dispatcherOperation = Dispatcher.InvokeAsync(new Action(() =>
+            {
+                Console.WriteLine("Connected");
+                try
+                {
+                    textBlock_currentFace.Text = Avatar.CurFaceName;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+
+                groupBox_Trash.IsEnabled = true;
+                groupBox_VTuber.IsEnabled = true;
+                Console.WriteLine("Updated UI");
+
+            }));
+            dispatcherOperation.Wait();
             JumpscareImage = OBSStructure.RootScene.FindItem("JUMPSCARE_IMAGE");
             JumpscareSound = OBSStructure.RootScene.FindItem("VINE_BOOM");
             JumpscareImage2 = OBSStructure.RootScene.FindItem("RALSEI2");
-            beerAnim = FrameAnimation.FromJson(@"G:\OBS\ANIMS\BEER_ANIM.json", OBSStructure.RootScene);
+            PoczekaShrek = OBSStructure.RootScene.FindItem("NO_TO_SE_JESZCZE_POCZEKA");
+            beerAnim = FrameAnimation.FromJson(@"G:\OBS_DECK\ANIMS\BEER_ANIM.json", OBSStructure.RootScene);
+            Console.WriteLine("Trash scenes loaded");
             Animator.RegisterAnimation(beerAnim);
             Animator.Run();
-            
-            
+            Console.WriteLine("Animator enabled");
+
             DVDPong.Speed = Settings.DVDSpeed;
-            Dispatcher.InvokeAsync(new Action(() =>
+            dispatcherOperation = Dispatcher.InvokeAsync(new Action(() =>
             {
                 textBlock_BeerLoopStatus.Text = beerAnim.Loop ? "on" : "off";
                 if (Settings.DonationSceneName != null)
@@ -241,19 +374,41 @@ namespace PiwotOBSDeck
                     TryGettingDonationTextItem();
                 }
 
+                if (Settings.AchievementSceneName != null)
+                    TryGettingAchievementsScene();
+                if (SteamAchievementDispatcher.AchievementsScene != null && Settings.AchievementIconItemName != null)
+                {
+                    TryGettingAchivementIconItem();
+                }
+                if (SteamAchievementDispatcher.AchievementsScene != null && Settings.AchievementBackgroundItemName != null)
+                {
+                    TryGettingAchivementBackgroundItem();
+                }
                 if (Settings.GoalSceneName != null)
                     TryGettingGoalScene();
+                if (Settings.AvatarSceneName != null)
+                    TryGettingAvatarScene();
                 if (DonationDispatcher.GoalScene != null)
                 {
-                    if(Settings.GoalTextItemName != null)
+                    if (Settings.GoalTextItemName != null)
                         TryGettingGoalTextItem();
-                    if(Settings.GoalBarItemName != null)
+                    if (Settings.GoalBarItemName != null)
                         TryGettingGoalBarItem();
                 }
 
+                if(Settings.VCPresenceSceneName  != null)
+                {
+                    TryGettingVCPresenceScene();
+                }
+
                 DonationDispatcher.RefreshGoal();
+                Console.WriteLine("Dvd refreshed.");
 
             }));
+            dispatcherOperation.Wait();
+
+            
+            Console.WriteLine("All OnConnect actions triggered.");
         }
 
         private void ButtonConnect_Click(object sender, RoutedEventArgs e)
@@ -281,7 +436,7 @@ namespace PiwotOBSDeck
                 VoiceCenter.Enable();
                 VoiceDisplay.Start();
             }
-            
+            UpdateVoiceMeterBackground();
         }
 
         private void ButtonAutoConnect_Click(object sender, RoutedEventArgs e)
@@ -313,12 +468,26 @@ namespace PiwotOBSDeck
             }
         }
 
+        void UpdateVoiceMeterBackground()
+        {
+            if (VoiceCenter.Enabled)
+            {
+                groupBox_voiceMeter.BorderBrush = new SolidColorBrush(ConnectedColor);
+                groupBox_voiceMeter.Background = new SolidColorBrush(ConnectedBackColor);
+            }
+            else
+            {
+                groupBox_voiceMeter.BorderBrush = new SolidColorBrush(DisconnectedColor);
+                groupBox_voiceMeter.Background = new SolidColorBrush(DisconnectedBackColor);
+            }
+        }
+
         private void ButtonJumpscare_Click(object sender, RoutedEventArgs e)
         {
             Task task = new Task(
                 () =>
                 {
-                    string fName = @"G:\OBS\RESOURCES\VINE_BOOM.mp3";
+                    string fName = @"G:\OBS_DECK\RESOURCES\VINE_BOOM.mp3";
                     MediaPlayer mediaPlayer = new MediaPlayer();
                     mediaPlayer.Open(new Uri(fName));
                     mediaPlayer.Volume = 0.7;
@@ -341,7 +510,7 @@ namespace PiwotOBSDeck
             Task task = new Task(
                 () =>
                 {
-                    string fName = @"G:\OBS\RESOURCES\VINE_BOOM.mp3";
+                    string fName = @"G:\OBS_DECK\RESOURCES\VINE_BOOM.mp3";
                     MediaPlayer mediaPlayer = new MediaPlayer();
                     mediaPlayer.Open(new Uri(fName));
                     mediaPlayer.Volume = 0.95;
@@ -390,6 +559,7 @@ namespace PiwotOBSDeck
 
             Avatar = Avatar.FromSave(Path.Combine(Settings.StoragePath_Avatars, "BASIC_XD_BOB"));
             Avatar.Reset();
+            textBlock_currentFace.Text = Avatar.CurFaceName;
             UpdateAvatarMainBackground();
         }
 
@@ -433,16 +603,16 @@ namespace PiwotOBSDeck
 
         private void button_toggleDonations_Click(object sender, RoutedEventArgs e)
         {
-            if (DonationRecService.IsRunning)
+            if (RequestRecService.IsRunning)
             {
-                DonationRecService.Stop();
+                RequestRecService.Stop();
             }
             else
             {
                 textBlock_DonationConnectionStatus.Text = "connecting...";
                 groupBox_connectionsDonations.BorderBrush = new SolidColorBrush(ConnectingColor);
                 groupBox_connectionsDonations.Background = new SolidColorBrush(ConnectingBackColor);
-                DonationRecService.Start();
+                RequestRecService.Start();
             }
         }
 
@@ -460,15 +630,77 @@ namespace PiwotOBSDeck
             donationTextItems = textItems.Select(x => x.Name).ToList();
             comboBox_donationTexts.ItemsSource = donationTextItems;
             comboBox_donationTexts.Items.Refresh();
-            if(Settings.DonationSceneName == sceneName && Settings.DonationTextItemName != null)
+            if (Settings.DonationSceneName == sceneName && Settings.DonationTextItemName != null)
             {
-                if(donationTextItems.Contains(Settings.DonationTextItemName))
+                if (donationTextItems.Contains(Settings.DonationTextItemName))
                 {
                     comboBox_donationTexts.SelectedItem = Settings.DonationTextItemName;
                 }
             }
             DonationDispatcher.DonationScene = scene;
             Settings.DonationSceneName = sceneName;
+            Settings.Save();
+        }
+
+        void TryGettingAchievementsScene()
+        {
+            string sceneName = (string)comboBox_achievementScenes1.SelectedItem;
+            Scene? scene = (Scene?)(OBSStructure.RootScene?.FindItem(sceneName));
+            var imageItems = scene?.GetChildrenOfType<ItemImage>(true) ?? new List<ItemImage>();
+            achievementBackgroundImageItems = imageItems.Select(x => x.Name).ToList();
+            achievementIconImageItems = imageItems.Select(x => x.Name).ToList();
+            comboBox_achBackground1.ItemsSource = achievementBackgroundImageItems;
+            comboBox_achIcon1.ItemsSource = achievementIconImageItems;
+            comboBox_achBackground1.Items.Refresh();
+            comboBox_achIcon1.Items.Refresh();
+            if (Settings.AchievementSceneName == sceneName)
+            {
+                if (Settings.AchievementBackgroundItemName != null && achievementBackgroundImageItems.Contains(Settings.AchievementBackgroundItemName))
+                {
+                    comboBox_achBackground1.SelectedItem = Settings.AchievementBackgroundItemName;
+                }
+                if (Settings.AchievementIconItemName != null && achievementIconImageItems.Contains(Settings.AchievementIconItemName))
+                {
+                    comboBox_achIcon1.SelectedItem = Settings.AchievementIconItemName;
+                }
+            }
+
+
+
+            SteamAchievementDispatcher.AchievementsScene = scene;
+            Settings.AchievementSceneName = sceneName;
+            Settings.Save();
+        }
+
+        void TryGettingVCPresenceScene()
+        {
+            string sceneName = (string)comboBox_vcPresenceScenes.SelectedItem;
+            Scene? scene = (Scene?)(OBSStructure.RootScene?.FindItem(sceneName));
+            var imageItems = scene?.GetChildrenOfType<ItemImage>(true).Where((x)=>x.Name.StartsWith(textBox_VCPresenceNameInput.Text)).ToList() ?? new List<ItemImage>();
+            
+
+
+            if (Settings.VCPresenceSceneName == sceneName)
+            {
+                // nothing for now i guess
+            }
+
+
+            var dispatcherOperation = Dispatcher.InvokeAsync(new Action(() =>
+            {
+                try
+                {
+                    textBlock_VCPresenceFoundPortraits.Text = imageItems.Count.ToString();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+
+            }));
+            dispatcherOperation.Wait();
+            VCPresenceControler.UpdateItems(scene, imageItems);
+            Settings.VCPresenceSceneName = sceneName;
             Settings.Save();
         }
 
@@ -484,6 +716,30 @@ namespace PiwotOBSDeck
             Settings.Save();
         }
 
+        void TryGettingAchivementIconItem()
+        {
+            string imageName = (string)comboBox_achIcon1.SelectedItem;
+            var imageItem = SteamAchievementDispatcher.AchievementsScene?.FindItem(imageName);
+            if (imageItem != null)
+            {
+                SteamAchievementDispatcher.SteamAchievementIconItem = (ItemImage?)imageItem;
+            }
+            Settings.AchievementIconItemName = imageName;
+            Settings.Save();
+        }
+
+        void TryGettingAchivementBackgroundItem()
+        {
+            string imageName = (string)comboBox_achBackground1.SelectedItem;
+            var imageItem = SteamAchievementDispatcher.AchievementsScene?.FindItem(imageName);
+            if (imageItem != null)
+            {
+                SteamAchievementDispatcher.SteamAchievementBackgroundItem = (ItemImage?)imageItem;
+            }
+            Settings.AchievementBackgroundItemName = imageName;
+            Settings.Save();
+        }
+
         void TryGettingGoalScene()
         {
             string sceneName = (string)comboBox_goalnScenes.SelectedItem;
@@ -492,7 +748,7 @@ namespace PiwotOBSDeck
             goalTextItems = textItems.Select(x => x.Name).ToList();
             comboBox_goalTexts.ItemsSource = goalTextItems;
             comboBox_goalTexts.Items.Refresh();
-            
+
             var goalItems = scene?.GetChildrenOfType<SceneItem>(true) ?? new List<SceneItem>();
             goalBarItems = goalItems.Select(x => x.Name).ToList();
             comboBox_goalBar.ItemsSource = goalBarItems;
@@ -512,6 +768,31 @@ namespace PiwotOBSDeck
 
             DonationDispatcher.GoalScene = scene;
             Settings.GoalSceneName = sceneName;
+            Settings.Save();
+        }
+
+        void TryGettingAvatarScene()
+        {
+            string sceneName = (string)comboBox_avatarScenes.SelectedItem;
+            Scene? scene = (Scene?)(OBSStructure.RootScene?.FindItem(sceneName));
+            var children = scene?.GetChildren(true) ?? new List<SceneItem>();
+            avatarSceneItems = children.Select(x => x.Name).ToList();
+            listBox_faceSelection.ItemsSource = avatarSceneItems;
+            listBox_faceSelection.Items.Refresh();
+
+
+            if (Settings.AvatarSceneName == sceneName)
+            {
+                foreach(var faceName in Avatar.Faces.Keys)
+                {
+                    if(avatarSceneItems.Contains(faceName))
+                    {
+                        listBox_faceSelection.SelectedItems.Add(faceName);
+                    }
+                }
+            }
+
+            Settings.AvatarSceneName = sceneName;
             Settings.Save();
         }
 
@@ -702,10 +983,10 @@ namespace PiwotOBSDeck
             Task task = new Task(
                 () =>
                 {
-                    string fName = @"G:\OBS\RESOURCES\SMOKE_DETECTOR.mp3";
+                    string fName = @"G:\OBS_DECK\RESOURCES\SMOKE_DETECTOR.mp3";
                     MediaPlayer? mediaPlayer = new MediaPlayer();
                     mediaPlayer.Open(new Uri(fName));
-                    mediaPlayer.Volume = 0.7;
+                    mediaPlayer.Volume = 0.5;
                     mediaPlayer.Play();
                     Thread.Sleep(2500);
                     mediaPlayer.Stop();
@@ -716,5 +997,117 @@ namespace PiwotOBSDeck
             task.Start();
         }
 
+        private void comboBox_avatarScenes_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (OBSDeck.IsConnected)
+                Dispatcher.InvokeAsync(TryGettingAvatarScene);
+        }
+
+        private void button_faceSelection_Click(object sender, RoutedEventArgs e)
+        {
+            if(stackPanel_faceSelection.Visibility == Visibility.Visible)
+            {
+                stackPanel_faceSelection.Visibility = Visibility.Collapsed;
+                button_faceSelection.Content = "Face selection";
+                Avatar.SetFaces(listBox_faceSelection.SelectedItems.Cast<string>().ToList());
+                //Avatar.UpdateFromOBS();
+                Avatar.SaveDefinition(Settings.StoragePath_Avatars);
+            }
+            else
+            {
+                stackPanel_faceSelection.Visibility = Visibility.Visible;
+                button_faceSelection.Content = "Confirm selection";
+            }
+        }
+
+        private void button_faceRight_Click(object sender, RoutedEventArgs e)
+        {
+            Avatar.CycleFace(true);
+            textBlock_currentFace.Text = Avatar.CurFaceName;
+        }
+
+        private void button_faceLeft_Click(object sender, RoutedEventArgs e)
+        {
+            Avatar.CycleFace(false);
+            textBlock_currentFace.Text = Avatar.CurFaceName;
+        }
+
+        private void ButtonPoczeka_Shrek_Click(object sender, RoutedEventArgs e)
+        {
+            Task task = new Task(
+                () =>
+                {
+                    PoczekaShrek.Enable();
+                    string fName = @"G:\OBS_DECK\RESOURCES\POCZEKA_SHREK.mp3";
+                    MediaPlayer? mediaPlayer = new MediaPlayer();
+                    mediaPlayer.Open(new Uri(fName));
+                    mediaPlayer.Volume = 0.7;
+                    mediaPlayer.Play();
+                    Thread.Sleep(3000);
+                    mediaPlayer.Stop();
+                    mediaPlayer.Close();
+                    mediaPlayer = null;
+                    PoczekaShrek.Disable();
+                }
+                );
+            task.Start();
+            
+            //PoczekaShrek.Enable();
+
+        }
+
+        private void button_pauseAchievements1_Click(object sender, RoutedEventArgs e)
+        {
+            SteamAchievementDispatcher.Paused = !SteamAchievementDispatcher.Paused;
+            if (SteamAchievementDispatcher.Paused)
+            {
+                button_pauseAchievements1.Content = "Resume queue";
+            }
+            else
+            {
+                button_pauseAchievements1.Content = "Pause queue";
+            }
+        }
+
+        private void button_skipAchievement1_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void comboBox_achievementScenes1_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (OBSDeck.IsConnected)
+                Dispatcher.InvokeAsync(TryGettingAchievementsScene);
+        }
+
+        private void comboBox_achBackground1_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (OBSDeck.IsConnected)
+                Dispatcher.InvokeAsync(TryGettingAchivementBackgroundItem);
+        }
+
+        private void comboBox_achIcon1_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (OBSDeck.IsConnected)
+                Dispatcher.InvokeAsync(TryGettingAchivementIconItem);
+        }
+
+        private void comboBox_vcPresenceScenes_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (OBSDeck.IsConnected)
+                Dispatcher.InvokeAsync(TryGettingVCPresenceScene);
+        }
+
+        
+
+        private void button_toggleVCPresence_Click(object sender, RoutedEventArgs e)
+        {
+            if (OBSDeck.IsConnected)
+            {
+                var enabled = VCPresenceControler.Toggle();
+                button_toggleVCPresence.Content = !enabled ? "Enable" : "Disable";
+                textBlock_VCPresenceStatus.Text = enabled ? "Enabled" : "Disabled";
+            }
+        }
     }
 }

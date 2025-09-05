@@ -161,7 +161,7 @@ namespace PiwotOBSDeck
 
 
 
-        public static DonationRequest FromWebRequest(Donations.WebRequests.DonationRequest source) 
+        public static DonationRequest FromWebRequest(WebServices.WebRequests.DonationRequest source) 
         {
             return new DonationRequest(source.AuthorName, source.Text, source.Value, source.ID, source.AuthorID, source.Meta);
         }

@@ -15,11 +15,18 @@ namespace PiwotOBSDeck
         public string StoragePath { get; set; }
 
         public string MainPath { get; set; }
+        public string SteamNotificationSoundPath { get; set; }
+        public string? VCPresencePortraitNameTemplate { get; set; }
         public int MaxDonationTextWidth { get; set; } = 32;
+        public string? VCPresenceSceneName { get; set; }
         public string? DonationSceneName { get; set; }
+        public string? AchievementSceneName { get; set; }
+        public string? AchievementBackgroundItemName { get; set; }
+        public string? AchievementIconItemName { get; set; }
         public string? DonationTextItemName { get; set; }
         public string? GoalTextItemName { get; set; }
         public string? GoalSceneName { get; set; }
+        public string? AvatarSceneName { get; set; }
         public string? GoalBarItemName { get; set; }
         public double? GoalTargetValue { get; set; }
         public double? GoalProgressValue { get; set; }
@@ -93,6 +100,24 @@ namespace PiwotOBSDeck
             }
         }
 
+        public static string? VCPresenceSceneName
+        {
+            get => instance.VCPresenceSceneName;
+            set
+            {
+                instance.VCPresenceSceneName = value;
+            }
+        }
+
+        public static string? VCPresencePortraitNameTemplate
+        {
+            get => instance.VCPresencePortraitNameTemplate;
+            set
+            {
+                instance.VCPresencePortraitNameTemplate = value;
+            }
+        }
+
         public static string? DonationSceneName
         {
             get => instance.DonationSceneName;
@@ -101,12 +126,57 @@ namespace PiwotOBSDeck
                 instance.DonationSceneName = value;
             }
         }
+
+        public static string? AchievementSceneName
+        {
+            get => instance.AchievementSceneName;
+            set
+            {
+                instance.AchievementSceneName = value;
+            }
+        }
+
+        public static string? AchievementBackgroundItemName
+        {
+            get => instance.AchievementBackgroundItemName;
+            set
+            {
+                instance.AchievementBackgroundItemName = value;
+            }
+        }
+
+        public static string? AchievementIconItemName
+        {
+            get => instance.AchievementIconItemName;
+            set
+            {
+                instance.AchievementIconItemName = value;
+            }
+        }
+
+        public static string? AvatarSceneName
+        {
+            get => instance.AvatarSceneName;
+            set
+            {
+                instance.AvatarSceneName = value;
+            }
+        }
         public static string? DonationTextItemName
         {
             get => instance.DonationTextItemName;
             set
             {
                 instance.DonationTextItemName = value;
+            }
+        }
+
+        public static string? SteamNotificationSoundPath
+        {
+            get => instance.SteamNotificationSoundPath;
+            set
+            {
+                instance.SteamNotificationSoundPath = value;
             }
         }
 
@@ -145,6 +215,7 @@ namespace PiwotOBSDeck
                 instance.DVDSpeed = value;
             }
         }
+
 
         private static SettingsCarrier instance;
 

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Nodes;
 using System.Text.Json;
 
-namespace PiwotOBSDeck.Donations.WebRequests
+namespace PiwotOBSDeck.WebServices.WebRequests
 {
     public class PingRequest : RequestBase
     {

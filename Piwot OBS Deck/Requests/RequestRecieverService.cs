@@ -10,13 +10,14 @@ using System.Globalization;
 using System.Text.Json.Nodes;
 using System.IO;
 using System.Windows.Interop;
-using PiwotOBSDeck.Donations.Events;
-using PiwotOBSDeck.Donations.WebRequests;
+using PiwotOBSDeck.WebServices.Events;
+using PiwotOBSDeck.WebServices.WebRequests;
+using PiwotOBSDeck.Requests.Events;
 
-namespace PiwotOBSDeck.Donations
+namespace PiwotOBSDeck.WebServices
 {
 
-    public class DonationRecieverService
+    public class RequestRecieverService
     {
         protected Thread recievingThread;
         protected Thread connectingThread;
@@ -25,22 +26,24 @@ namespace PiwotOBSDeck.Donations
         protected TcpListener? server;
         protected bool StopRecievingThreadFlag;
         protected bool StopConnectingThreadFlag;
-        public event EventHandler<OnDonationClientConnectedEventArgs> OnClientConnected;
+        public event EventHandler<OnRequestClientConnectedEventArgs> OnClientConnected;
         public event EventHandler<EventArgs> OnConnectionFail;
-        public event EventHandler<OnDonationClientDisconnectedEventArgs> OnClientDisconnected;
+        public event EventHandler<OnRequestClientDisconnectedEventArgs> OnClientDisconnected;
         public event EventHandler<OnDonationEventArgs> OnDonation;
+        public event EventHandler<OnSteamAchievementEventArgs> OnSteamAchievement;
+        public event EventHandler<OnVCPresenceUpdateEventArgs> OnVCPresenceUpdate;
         public bool DebugMode { get; set; } = false;
         public double MaxPingInterval { get; set; } = 5;
         public DateTime? LastPing;
         private int recivTickLength = 100;
         private int RecivTimeout=5000;
 
-        public bool IsDonationSourceConnected { get => LastPing != null && (DateTime.Now - LastPing).Value.TotalSeconds < MaxPingInterval; }
+        public bool IsRequestSourceConnected { get => LastPing != null && (DateTime.Now - LastPing).Value.TotalSeconds < MaxPingInterval; }
         public bool IsRunning { get; private set; }
         public int ConnectionTimeout { get; private set; } = 10000;
         public string? CurrentClientName { get; private set; }
         public bool ClientDidConnect { get; private set; }
-        public DonationRecieverService()
+        public RequestRecieverService()
         {
             
             StopRecievingThreadFlag = false;
@@ -157,7 +160,7 @@ namespace PiwotOBSDeck.Donations
                 {
                     Console.WriteLine("Client disconnected. Closing connection.");
                     EndRecieving();
-                    OnClientDisconnected?.Invoke(this, new OnDonationClientDisconnectedEventArgs(CurrentClientName??""));
+                    OnClientDisconnected?.Invoke(this, new OnRequestClientDisconnectedEventArgs(CurrentClientName??""));
                     return;
                 }
 
@@ -184,8 +187,8 @@ namespace PiwotOBSDeck.Donations
                         case RequestBase.RequestType.Greeting:
                             GreetingRequest? greetingRequest = (GreetingRequest)request;
                             Console.WriteLine($"Greeting from: {greetingRequest.Name} ({greetingRequest.PeerType})");
-                            new GreetingRequest("PiwotOBSDeck", "donationReciever").Send(stream);
-                            if(!IsDonationSourceConnected)
+                            new GreetingRequest("PiwotOBSDeck", "requestReciever").Send(stream);
+                            if(!IsRequestSourceConnected)
                             {
                                 CurrentClientName = greetingRequest.Author;
                             }
@@ -200,7 +203,7 @@ namespace PiwotOBSDeck.Donations
                                 {
                                     new StatusRequest("ready").Send(stream);
                                     LastPing = DateTime.Now;
-                                    OnClientConnected?.Invoke(this, new OnDonationClientConnectedEventArgs(CurrentClientName));
+                                    OnClientConnected?.Invoke(this, new OnRequestClientConnectedEventArgs(CurrentClientName));
                                 }
                                 else
                                 {
@@ -237,8 +240,19 @@ namespace PiwotOBSDeck.Donations
                         case RequestBase.RequestType.Donation:
                             WebRequests.DonationRequest dr = (WebRequests.DonationRequest)request;
 
-                            Console.WriteLine($"{dr.AuthorName}:\n{dr.Text}");
-                            OnDonation?.Invoke(this, new OnDonationEventArgs(CurrentClientName??"", dr));
+                            Console.WriteLine($"Req.Donation: {dr.AuthorName}:\n{dr.Text}");
+                            OnDonation?.Invoke(this, new OnDonationEventArgs(CurrentClientName ?? "", dr));
+                            break;
+                        case RequestBase.RequestType.SteamAchievement:
+                            WebRequests.SteamAchievementRequest sar = (WebRequests.SteamAchievementRequest)request;
+
+                            Console.WriteLine($"Req.SteamAchievement: {sar.Name}:\n{sar.Description}");
+                            OnSteamAchievement?.Invoke(this, new OnSteamAchievementEventArgs(CurrentClientName ?? "", sar));
+                            break;
+                        case RequestBase.RequestType.VCPresence:
+                            WebRequests.VCPresenceUpdateRequest vcp = (WebRequests.VCPresenceUpdateRequest)request;
+                            Console.WriteLine($"Req.VCPresenceUpdate: {vcp.Names.Length} users at {vcp.Timestamp}");
+                            OnVCPresenceUpdate?.Invoke(this, new OnVCPresenceUpdateEventArgs(vcp));
                             break;
 
                         default: break;

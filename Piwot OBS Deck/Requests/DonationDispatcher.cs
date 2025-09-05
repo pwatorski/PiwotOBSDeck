@@ -6,8 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using PiwotOBS.Structure;
+using PiwotOBSDeck.Requests.Events;
 
-namespace PiwotOBSDeck.Donations
+namespace PiwotOBSDeck.WebServices
 {
     public static class DonationDispatcher
     {
@@ -83,6 +84,9 @@ namespace PiwotOBSDeck.Donations
                                 {
                                     case 689528640655851616: //ramil
                                         request.Download("cs");
+                                        break;
+                                    case 214429964437684224: //volke
+                                        request.Download("ru");
                                         break;
                                     default:
                                         request.Download("pl");

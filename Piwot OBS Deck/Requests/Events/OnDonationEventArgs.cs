@@ -1,7 +1,7 @@
 ﻿using System;
-using PiwotOBSDeck.Donations.WebRequests;
+using PiwotOBSDeck.WebServices.WebRequests;
 
-namespace PiwotOBSDeck.Donations.Events
+namespace PiwotOBSDeck.WebServices.Events
 {
     public class OnDonationEventArgs : EventArgs
     {

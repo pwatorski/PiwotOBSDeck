@@ -159,13 +159,14 @@ namespace PiwotOBSDeck
             return str.Trim().Replace(NlnChar, '\n');
         }
 
-        public T? GetVal<T>(string key, object? defVal=null)
+        public T? GetVal<T>(string key, T? defVal = default)
         {
             if (settings.TryGetValue(key, out var val))
             {
-                return (T)val;
+                if (val is T tVal)
+                    return tVal;
             }
-            return (T?)defVal;
+            return defVal;
         }
 
         public bool SetVal(string key, object val)
