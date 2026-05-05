@@ -1,26 +1,27 @@
 ﻿
+using Newtonsoft.Json.Linq;
 using PiwotOBS;
+using PiwotOBS.PMath;
 using PiwotOBS.Structure;
 using PiwotOBS.Structure.Animations;
+using PiwotOBSDeck.Requests;
+using PiwotOBSDeck.Requests.Events;
 using PiwotOBSDeck.VTuber;
+using PiwotOBSDeck.WebServices;
+using PiwotOBSDeck.WebServices.Events;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using PiwotOBSDeck.WebServices.Events;
-using PiwotOBSDeck.WebServices;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Input;
-using Newtonsoft.Json.Linq;
-using PiwotOBSDeck.Requests;
-using PiwotOBSDeck.Requests.Events;
 
 namespace PiwotOBSDeck
 {
@@ -163,7 +164,49 @@ namespace PiwotOBSDeck
             }
 
 
-            textBox_dvdSpeed.Text = $"{Settings.DVDSpeed}";
+
+            if (Settings.PortraitSize != null)
+            {
+                VCPresenceControler.PortraitSize = Settings.PortraitSize;
+                textBox_VCP_PortraitSizeX.Text = Settings.PortraitSize.X.ToString();
+                textBox_VCP_PortraitSizeY.Text = Settings.PortraitSize.Y.ToString();
+            }
+            if (Settings.PortraitScreenAnchorPosition != null)
+            {
+                VCPresenceControler.PortraitScreenAnchorPosition = Settings.PortraitScreenAnchorPosition;
+                textBox_VCP_PortraitScreenAnchorX.Text = Settings.PortraitScreenAnchorPosition.X.ToString();
+                textBox_VCP_PortraitScreenAnchorY.Text = Settings.PortraitScreenAnchorPosition.Y.ToString();
+            }
+            if (Settings.PortraitRelativeOrdinalOffset != null)
+            {
+                VCPresenceControler.PortraitRelativeOrdinalOffset = Settings.PortraitRelativeOrdinalOffset;
+                textBox_VCP_PortraitOrdinalOffsetX.Text = Settings.PortraitRelativeOrdinalOffset.X.ToString();
+                textBox_VCP_PortraitOrdinalOffsetY.Text = Settings.PortraitRelativeOrdinalOffset.Y.ToString();
+            }
+            if (Settings.PortraitMovementMagnitude != null)
+            {
+                VCPresenceControler.PortraitMovementMagnitude = Settings.PortraitMovementMagnitude;
+                textBox_VCP_PortraitMovementMagnitudeX.Text = Settings.PortraitMovementMagnitude.X.ToString();
+                textBox_VCP_PortraitMovementMagnitudeY.Text = Settings.PortraitMovementMagnitude.Y.ToString();
+            }
+            VCPresenceControler.PortraitRotationMagnitude = Settings.PortraitRotationMagnitude;
+            textBox_VCP_PortraitRotationMagnitude.Text = Settings.PortraitRotationMagnitude.ToString();
+            VCPresenceControler.PortraitMovementTimePeriod = Settings.PortraitMovementTimePeriod;
+            textBox_VCP_PortraitMovementPeriod.Text = Settings.PortraitMovementTimePeriod.ToString();
+            VCPresenceControler.PortraitRotationTimePeriod = Settings.PortraitRotationTimePeriod;
+            textBox_VCP_PortraitRotationPeriod.Text = Settings.PortraitRotationTimePeriod.ToString();
+            VCPresenceControler.PortraitMovementTimeOffset = Settings.PortraitMovementTimeOffset;
+            textBox_VCP_PortraitMovementOffset.Text = Settings.PortraitMovementTimeOffset.ToString();
+            VCPresenceControler.PortraitRotationTimeOffset = Settings.PortraitRotationTimeOffset;
+            textBox_VCP_PortraitRotationOffset.Text = Settings.PortraitRotationTimeOffset.ToString();
+            VCPresenceControler.PortraitMovementOrdinalTimeOffsetMultiplier = Settings.PortraitMovementOrdinalTimeOffsetMultiplier;
+            textBox_VCP_PortraitOrdinalMoveTimeOffsetMultiplier.Text = Settings.PortraitMovementOrdinalTimeOffsetMultiplier.ToString();
+            VCPresenceControler.PortraitRotationOrdinalTimeOffsetMultiplier = Settings.PortraitRotationOrdinalTimeOffsetMultiplier;
+            textBox_VCP_PortraitOrdinalRotTimeOffsetMultiplier.Text = Settings.PortraitRotationOrdinalTimeOffsetMultiplier.ToString();
+
+
+
+        textBox_dvdSpeed.Text = $"{Settings.DVDSpeed}";
             checkBox_enableMultilang.IsChecked = Settings.MultilangEnabled;
 
             OBSDeck.Connected += new EventHandler(OnConnected);
@@ -195,7 +238,7 @@ namespace PiwotOBSDeck
             VCPresenceControler.UpdatePresence(e.Request);
             var enablesStatus = VCPresenceControler.Enabled ? "Enabled" : "Disabled";
             var curViewersText = $"{e.Request.Ids.Length}";
-            var lastUpdate = VCPresenceControler.LastUpdate.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss.ff");
+            var lastUpdate = VCPresenceControler.LastUpdate.ToLocalTime().ToString("dd.MM HH:mm:ss.ff");
             Dispatcher.InvokeAsync(new Action(() =>
             {
                 textBlock_VCPresenceCurViewers.Text = curViewersText;
@@ -927,9 +970,9 @@ namespace PiwotOBSDeck
             }
         }
 
-        private void textBox_dvdSpeed_KeyUp(object sender, KeyEventArgs e)
+        private void textBox_KeyUp_ClearFocus(object sender, KeyEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 Keyboard.ClearFocus();
             }
@@ -1107,6 +1150,317 @@ namespace PiwotOBSDeck
                 var enabled = VCPresenceControler.Toggle();
                 button_toggleVCPresence.Content = !enabled ? "Enable" : "Disable";
                 textBlock_VCPresenceStatus.Text = enabled ? "Enabled" : "Disabled";
+            }
+        }
+
+        private void button_toggleVCPresenceSettings_Click(object sender, RoutedEventArgs e)
+        {
+            groupBox_VCPresenceSetings.Visibility = groupBox_VCPresenceSetings.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void textBox_VCPresenceNameInput_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            Settings.VCPresencePortraitNameTemplate = textBox_VCPresenceNameInput.Text;
+            if (OBSDeck.IsConnected)
+                Dispatcher.InvokeAsync(TryGettingVCPresenceScene);
+        }
+
+        private void textBox_VCP_PortraitSize_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!OBSDeck.IsConnected)
+            {
+                return;
+            }
+            var textValueX = textBox_VCP_PortraitSizeX.Text;
+            var textValueY = textBox_VCP_PortraitSizeY.Text;
+            
+            if (float.TryParse(textValueX, out float valueX) && valueX > 0 
+                && float.TryParse(textValueY, out float valueY) && valueY > 0)
+            {
+                textBox_VCP_PortraitSizeX.Text = $"{valueX}";
+                textBox_VCP_PortraitSizeY.Text = $"{valueY}";
+                VCPresenceControler.PortraitSize = new PiwotOBS.PMath.Float2(valueX, valueY);
+                Settings.PortraitSize = VCPresenceControler.PortraitSize;
+                Settings.Save();
+            }
+            else
+            {
+                if (textBox_VCP_PortraitSizeX.Text.Length > 0)
+                {
+                    textBox_VCP_PortraitSizeX.Text = $"{VCPresenceControler.PortraitSize.X}";
+                }
+                if (textBox_VCP_PortraitSizeX.Text.Length > 0)
+                {
+                    textBox_VCP_PortraitSizeY.Text = $"{VCPresenceControler.PortraitSize.Y}";
+                }
+            }
+        }
+
+        private void textBox_VCP_PortraitScreenAnchor_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!OBSDeck.IsConnected)
+            {
+                return;
+            }
+            var textValueX = textBox_VCP_PortraitScreenAnchorX.Text;
+            var textValueY = textBox_VCP_PortraitScreenAnchorY.Text;
+            if (float.TryParse(textValueX, out float valueX) 
+                && float.TryParse(textValueY, out float valueY))
+            {
+                textBox_VCP_PortraitScreenAnchorX.Text = $"{valueX}";
+                textBox_VCP_PortraitScreenAnchorY.Text = $"{valueY}";
+                VCPresenceControler.PortraitScreenAnchorPosition = new PiwotOBS.PMath.Float2(valueX, valueY);
+                Settings.PortraitScreenAnchorPosition = VCPresenceControler.PortraitScreenAnchorPosition;
+                Settings.Save();
+            }
+            else
+            {
+                if (textValueX.Length > 0)
+                {
+                    textBox_VCP_PortraitScreenAnchorX.Text = $"{VCPresenceControler.PortraitScreenAnchorPosition.X}";
+                }
+                if (textValueY.Length > 0)
+                {
+                    textBox_VCP_PortraitScreenAnchorY.Text = $"{VCPresenceControler.PortraitScreenAnchorPosition.Y}";
+                }
+            }
+        }
+
+        private void textBox_VCP_PortraitOrdinalOffset_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!OBSDeck.IsConnected)
+            {
+                return;
+            }
+            var textValueX = textBox_VCP_PortraitOrdinalOffsetX.Text;
+            var textValueY = textBox_VCP_PortraitOrdinalOffsetY.Text;
+            if (float.TryParse(textValueX, out float valueX)
+                && float.TryParse(textValueY, out float valueY))
+            {
+                textBox_VCP_PortraitOrdinalOffsetX.Text = $"{valueX}";
+                textBox_VCP_PortraitOrdinalOffsetY.Text = $"{valueY}";
+                VCPresenceControler.PortraitRelativeOrdinalOffset = new PiwotOBS.PMath.Float2(valueX, valueY);
+                Settings.PortraitRelativeOrdinalOffset = VCPresenceControler.PortraitRelativeOrdinalOffset;
+                Settings.Save();
+            }
+            else
+            {
+                if (textValueX.Length > 0)
+                {
+                    textBox_VCP_PortraitOrdinalOffsetX.Text = $"{VCPresenceControler.PortraitRelativeOrdinalOffset.X}";
+                }
+                if (textValueY.Length > 0)
+                {
+                    textBox_VCP_PortraitOrdinalOffsetY.Text = $"{VCPresenceControler.PortraitRelativeOrdinalOffset.Y}";
+                }
+            }
+        }
+
+        private void textBox_VCP_PortraitMovementMagnitude_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!OBSDeck.IsConnected)
+            {
+                return;
+            }
+            var textValueX = textBox_VCP_PortraitMovementMagnitudeX.Text;
+            var textValueY = textBox_VCP_PortraitMovementMagnitudeY.Text;
+            if (float.TryParse(textValueX, out float valueX)
+                && float.TryParse(textValueY, out float valueY))
+            {
+                textBox_VCP_PortraitMovementMagnitudeX.Text = $"{valueX}";
+                textBox_VCP_PortraitMovementMagnitudeY.Text = $"{valueY}";
+                VCPresenceControler.PortraitMovementMagnitude = new PiwotOBS.PMath.Float2(valueX, valueY);
+                Settings.PortraitMovementMagnitude = VCPresenceControler.PortraitMovementMagnitude;
+                Settings.Save();
+            }
+            else
+            {
+                if (textValueX.Length > 0)
+                {
+                    textBox_VCP_PortraitMovementMagnitudeX.Text = $"{VCPresenceControler.PortraitMovementMagnitude.X}";
+                }
+                if (textValueY.Length > 0)
+                {
+                    textBox_VCP_PortraitMovementMagnitudeY.Text = $"{VCPresenceControler.PortraitMovementMagnitude.Y}";
+                }
+            }
+        }
+
+        private void textBox_VCP_PortraitRotationMagnitude_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
+            if (!OBSDeck.IsConnected)
+            {
+                return;
+            }
+            var textValue = textBox_VCP_PortraitRotationMagnitude.Text.Replace('.', ',');
+            if (textValue.EndsWith(','))
+                return;
+            if (float.TryParse(textValue, out float value))
+            {
+                textBox_VCP_PortraitRotationMagnitude.Text = $"{value}";
+                VCPresenceControler.PortraitRotationMagnitude = value;
+                Settings.PortraitRotationMagnitude = VCPresenceControler.PortraitRotationMagnitude;
+                Settings.Save();
+            }
+            else
+            {
+                if (textValue.Length > 0)
+                {
+                    textBox_VCP_PortraitRotationMagnitude.Text = $"{VCPresenceControler.PortraitRotationMagnitude}";
+                }
+            }
+        }
+
+        private void textBox_VCP_PortraitMovementPeriod_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!OBSDeck.IsConnected)
+            {
+                return;
+            }
+            var textValue = textBox_VCP_PortraitMovementPeriod.Text.Replace('.', ',');
+            if (textValue.EndsWith(','))
+                return;
+            if (float.TryParse(textValue, out float value))
+            {
+                // textBox_VCP_PortraitMovementPeriod.Text = $"{value}";
+                VCPresenceControler.PortraitMovementTimePeriod = value;
+                Settings.PortraitMovementTimePeriod = VCPresenceControler.PortraitMovementTimePeriod;
+                Settings.Save();
+            }
+            else
+            {
+                if (textValue.Length > 0)
+                {
+                    textBox_VCP_PortraitMovementPeriod.Text = $"{VCPresenceControler.PortraitMovementTimePeriod}";
+                }
+            }
+        }
+
+        private void textBox_VCP_PortraitRotationPeriod_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!OBSDeck.IsConnected)
+            {
+                return;
+            }
+            var textValue = textBox_VCP_PortraitRotationPeriod.Text.Replace('.', ',');
+            if (textValue.EndsWith(','))
+                return;
+            if (float.TryParse(textValue, out float value))
+            {
+                textBox_VCP_PortraitRotationPeriod.Text = $"{value}";
+                VCPresenceControler.PortraitRotationTimePeriod = value;
+                Settings.PortraitRotationTimePeriod = VCPresenceControler.PortraitRotationTimePeriod;
+                Settings.Save();
+            }
+            else
+            {
+                if (textValue.Length > 0)
+                {
+                    textBox_VCP_PortraitRotationPeriod.Text = $"{VCPresenceControler.PortraitRotationTimePeriod}";
+                }
+            }
+        }
+
+
+        private void textBox_VCP_PortraitMovementOffset_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!OBSDeck.IsConnected)
+            {
+                return;
+            }
+            var textValue = textBox_VCP_PortraitMovementOffset.Text.Replace('.', ',');
+            if (textValue.EndsWith(','))
+                return;
+            if (float.TryParse(textValue, out float value))
+            {
+                textBox_VCP_PortraitMovementOffset.Text = $"{value}";
+                VCPresenceControler.PortraitMovementTimeOffset = value;
+                Settings.PortraitMovementTimeOffset = VCPresenceControler.PortraitMovementTimeOffset;
+                Settings.Save();
+            }
+            else
+            {
+                if (textValue.Length > 0)
+                {
+                    textBox_VCP_PortraitMovementOffset.Text = $"{VCPresenceControler.PortraitMovementTimeOffset}";
+                }
+            }
+        }
+
+        private void textBox_VCP_PortraitRotationOffset_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!OBSDeck.IsConnected)
+            {
+                return;
+            }
+            var textValue = textBox_VCP_PortraitRotationOffset.Text.Replace('.', ',');
+            if (textValue.EndsWith(','))
+                return;
+            if (float.TryParse(textValue, out float value))
+            {
+                textBox_VCP_PortraitRotationOffset.Text = $"{value}";
+                VCPresenceControler.PortraitRotationTimeOffset = value;
+                Settings.PortraitRotationTimeOffset = VCPresenceControler.PortraitRotationTimeOffset;
+                Settings.Save();
+            }
+            else
+            {
+                if (textValue.Length > 0)
+                {
+                    textBox_VCP_PortraitRotationOffset.Text = $"{VCPresenceControler.PortraitRotationTimeOffset}";
+                }
+            }
+
+        }
+
+        private void textBox_VCP_PortraitOrdinalMoveTimeOffsetMultiplier_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!OBSDeck.IsConnected)
+            {
+                return;
+            }
+            var textValue = textBox_VCP_PortraitOrdinalMoveTimeOffsetMultiplier.Text.Replace('.', ',');
+            if (textValue.EndsWith(','))
+                return;
+            if (float.TryParse(textValue, out float value))
+            {
+                textBox_VCP_PortraitOrdinalMoveTimeOffsetMultiplier.Text = $"{value}";
+                VCPresenceControler.PortraitMovementOrdinalTimeOffsetMultiplier = value;
+                Settings.PortraitMovementOrdinalTimeOffsetMultiplier = VCPresenceControler.PortraitMovementOrdinalTimeOffsetMultiplier;
+                Settings.Save();
+            }
+            else
+            {
+                if (textValue.Length > 0)
+                {
+                    textBox_VCP_PortraitOrdinalMoveTimeOffsetMultiplier.Text = $"{VCPresenceControler.PortraitMovementOrdinalTimeOffsetMultiplier}";
+                }
+            }
+        }
+
+        private void textBox_VCP_PortraitOrdinalRotTimeOffsetMultiplier_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (!OBSDeck.IsConnected)
+            {
+                return;
+            }
+            var textValue = textBox_VCP_PortraitOrdinalRotTimeOffsetMultiplier.Text.Replace('.', ',');
+            if (textValue.EndsWith(','))
+                return;
+            if (float.TryParse(textValue, out float value))
+            {
+                textBox_VCP_PortraitOrdinalRotTimeOffsetMultiplier.Text = $"{value}";
+                VCPresenceControler.PortraitRotationOrdinalTimeOffsetMultiplier = value;
+                Settings.PortraitRotationOrdinalTimeOffsetMultiplier = VCPresenceControler.PortraitRotationOrdinalTimeOffsetMultiplier;
+                Settings.Save();
+            }
+            else
+            {
+                if (textValue.Length > 0)
+                {
+                    textBox_VCP_PortraitOrdinalRotTimeOffsetMultiplier.Text = $"{VCPresenceControler.PortraitRotationOrdinalTimeOffsetMultiplier}";
+                }
             }
         }
     }

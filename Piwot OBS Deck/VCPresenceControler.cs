@@ -1,4 +1,5 @@
-﻿using PiwotOBS.Structure;
+﻿using PiwotOBS.PMath;
+using PiwotOBS.Structure;
 using PiwotOBS.Structure.Animations;
 using PiwotOBSDeck.WebServices;
 using PiwotOBSDeck.WebServices.WebRequests;
@@ -29,6 +30,7 @@ namespace PiwotOBSDeck
         public string? ID { get; protected set; }
         public int Ordinal { get; protected set; }
         public ProceduralAnimation PortraitAnimation { get; protected set; }
+        
 
 
         public VCPresencePortrait(ItemImage itemImage, int ordinal, string? id = null, string? path = null, Animator? animator=null)
@@ -38,20 +40,7 @@ namespace PiwotOBSDeck
             Path = path;
             ItemImage = itemImage;
             Animator = animator;
-            PortraitAnimation = new ProceduralAnimation(ItemImage, GetAnimationFrame);
-        }
-
-        AnimationTransform GetAnimationFrame(float time, SceneItem itemImage)
-        {
-            float doublePI = MathF.PI * 2;
-            float offsetA = Ordinal/10.0f;
-            float offsetB = offsetA;
-            float period = 4;
-            float A = MathF.Sin((time / period - offsetA) * doublePI);
-            float B = MathF.Sin((time / period - offsetB) * doublePI);
-
-            return new AnimationTransform(itemImage, position: new PiwotOBS.PMath.Float2(100 + 160 * Ordinal + 15 * A, 1080), size: new PiwotOBS.PMath.Float2(162), rotation: B*3.0f
-                );
+            PortraitAnimation = new ProceduralAnimation(ItemImage, (t, i)=>VCPresenceControler.GetAnimationFrame(t, i, Ordinal));
         }
 
         public void SetPresence(string id, string path)
@@ -88,7 +77,35 @@ namespace PiwotOBSDeck
             
         }
 
+        public static Float2 PortraitSize { get; set; } = new Float2(150);
+        public static Float2 PortraitScreenAnchorPosition { get; set; } = new Float2(100, 1080);
+        public static Float2 PortraitRelativeOrdinalOffset { get; set; } = new Float2(160, 0);
+        public static Float2 PortraitMovementMagnitude { get; set; } = new Float2(15, 0);
+        public static float PortraitRotationMagnitude { get; set; } = 4;
+        public static float PortraitMovementTimePeriod { get=> portraitMovementTimePeriod; set { if (value != 0) portraitMovementTimePeriod = value; else portraitMovementTimePeriod = 0.0001f; } }
+        static float portraitMovementTimePeriod = 1;
+        public static float PortraitRotationTimePeriod { get => portraitRotationTimePeriod; set { if (value != 0) portraitRotationTimePeriod = value; else portraitRotationTimePeriod = 0.0001f; } }
+        static float portraitRotationTimePeriod = 1;
 
+        public static float PortraitMovementTimeOffset { get; set; } = 1;
+        public static float PortraitRotationTimeOffset { get; set; } = 1;
+
+        public static float PortraitMovementOrdinalTimeOffsetMultiplier { get; set; } = 0.1f;
+        public static float PortraitRotationOrdinalTimeOffsetMultiplier { get; set; } = 0.1f;
+
+        public static AnimationTransform GetAnimationFrame(float time, SceneItem itemImage, int ordinal)
+        {
+            float doublePI = MathF.PI * 2;
+            float timeOffsetMovement = PortraitMovementTimeOffset + ordinal * PortraitMovementOrdinalTimeOffsetMultiplier;
+            float timeOffsetRotation = PortraitRotationTimeOffset + ordinal * PortraitRotationOrdinalTimeOffsetMultiplier;
+
+            float movementMultiplier = MathF.Sin((time / PortraitMovementTimePeriod - timeOffsetMovement) * doublePI);
+            float rotationMultiplier = MathF.Sin((time / PortraitRotationTimePeriod - timeOffsetRotation) * doublePI);
+
+            var position = PortraitScreenAnchorPosition + PortraitRelativeOrdinalOffset * (float)ordinal + PortraitMovementMagnitude * movementMultiplier;
+            return new AnimationTransform(itemImage, position: position, rotation: rotationMultiplier * PortraitRotationMagnitude, scale: PortraitSize / 160f
+                );
+        }
 
         public static void UpdateItems(Scene? scene, List<ItemImage> itemImages)
             

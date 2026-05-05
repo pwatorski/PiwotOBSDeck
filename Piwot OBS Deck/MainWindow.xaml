@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PiwotOBSDeck"
         mc:Ignorable="d"
-        Title="PiwotOBSDeck" Height="673" Width="828" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner">
+        Title="PiwotOBSDeck" Height="673" Width="881" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -99,7 +99,7 @@
     <Grid Margin="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="272*"/>
-            <RowDefinition Height="29*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -144,12 +144,12 @@
                     <Button Content="No to se jeszcze poczeka" Margin="2" VerticalAlignment="Top" Height="24" Name="ButtonPoczeka_Shrek" Click="ButtonPoczeka_Shrek_Click"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="DVD speed: " Margin="2,2,0,1"/>
-                        <TextBox Name="textBox_dvdSpeed" MinWidth="30" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_dvdSpeed_KeyUp" TextChanged="textBox_dvdSpeed_TextChanged" TextAlignment="Right"/>
+                        <TextBox Name="textBox_dvdSpeed" MinWidth="30" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_dvdSpeed_TextChanged" TextAlignment="Right"/>
                         <TextBlock Text="px/frame" Margin="2,2,0,1"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
-            
+
         </StackPanel>
         <StackPanel Grid.Column="2" Grid.RowSpan="2">
             <GroupBox Name="groupBox_VTuber" Header="V-Tuber" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" IsEnabled="False">
@@ -266,7 +266,7 @@
                     </GroupBox>
                 </StackPanel>
             </GroupBox>
-            
+
         </StackPanel>
         <StackPanel Grid.Column="4" x:Name="stackPanel_achievementPopup">
             <GroupBox Header="Achievement popup" x:Name="groupBox_achievementPopupMain" IsEnabled="False">
@@ -285,7 +285,7 @@
                     <ComboBox x:Name="comboBox_achIcon1" Margin="2,0,2,2" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_achIcon1_SelectionChanged"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Name="groupBox_VCPresenceMain"  Header="VC Presence" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" Width="200" IsEnabled="False">
+            <GroupBox Name="groupBox_VCPresenceMain"  Header="VC Presence" HorizontalAlignment="Left" IsEnabled="False">
 
                 <StackPanel VerticalAlignment="Top" x:Name="stackPanel_VCPresence">
                     <StackPanel Orientation="Horizontal">
@@ -300,17 +300,78 @@
                         <TextBlock Text="Last update: " Margin="2,2,0,0"/>
                         <TextBlock Text="?" Margin="0,2,2,0" x:Name="textBlock_VCPresenceLastUpdate"/>
                     </StackPanel>
-
-                    <TextBlock Text="Scene:" Margin="2,2,2,0"/>
-                    <ComboBox x:Name="comboBox_vcPresenceScenes"  Margin="2,0,2,0" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_vcPresenceScenes_SelectionChanged" IsEnabled="True"/>
-                    <TextBlock Text="Portrat name template:" Margin="2,2,2,0"/>
-                    <TextBox x:Name="textBox_VCPresenceNameInput" Margin="2,0,2,0" VerticalAlignment="Top" Height="22" Text="VC_PRESENCE_" IsEnabled="True"/>
-
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Found portraits: " Margin="2,2,2,0"/>
                         <TextBlock Text="?" Margin="0,2,2,0" x:Name="textBlock_VCPresenceFoundPortraits"/>
                     </StackPanel>
                     <Button Content="Enable" Margin="2" VerticalAlignment="Top" Height="24" Name="button_toggleVCPresence" Click="button_toggleVCPresence_Click" IsEnabled="True"/>
+                    <Button Content="Settings" Margin="2" VerticalAlignment="Top" Height="24" Name="button_toggleVCPresenceSettings" Click="button_toggleVCPresenceSettings_Click" IsEnabled="True"/>
+                    <GroupBox Name="groupBox_VCPresenceSetings"  Header="Settings" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" Width="200" d:Visibility="Visible" Visibility="Collapsed" >
+                        <StackPanel>
+                            <TextBlock Text="Scene:" Margin="2,2,2,0"/>
+                            <ComboBox x:Name="comboBox_vcPresenceScenes"  Margin="2,0,2,0" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_vcPresenceScenes_SelectionChanged" />
+                            <TextBlock Text="Portrat name template:" Margin="2,2,2,0"/>
+                            <TextBox x:Name="textBox_VCPresenceNameInput" Margin="2,0,2,0" VerticalAlignment="Top" Height="22" Text="VC_PRESENCE_" TextChanged="textBox_VCPresenceNameInput_TextChanged"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Portrait size: "/>
+                                <TextBlock Text="("/>
+                                <TextBox Name="textBox_VCP_PortraitSizeX" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitSize_TextChanged" TextAlignment="Right"/>
+                                <TextBlock Text=","/>
+                                <TextBox Name="textBox_VCP_PortraitSizeY" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitSize_TextChanged" TextAlignment="Right"/>
+                                <TextBlock Text=")"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Screen anchor: "/>
+                                <TextBlock Text="("/>
+                                <TextBox Name="textBox_VCP_PortraitScreenAnchorX" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitScreenAnchor_TextChanged"  TextAlignment="Right"/>
+                                <TextBlock Text=","/>
+                                <TextBox Name="textBox_VCP_PortraitScreenAnchorY" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitScreenAnchor_TextChanged" TextAlignment="Right"/>
+                                <TextBlock Text=")"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Ordinal offset: "/>
+                                <TextBlock Text="("/>
+                                <TextBox Name="textBox_VCP_PortraitOrdinalOffsetX" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitOrdinalOffset_TextChanged"  TextAlignment="Right"/>
+                                <TextBlock Text=","/>
+                                <TextBox Name="textBox_VCP_PortraitOrdinalOffsetY" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitOrdinalOffset_TextChanged" TextAlignment="Right"/>
+                                <TextBlock Text=")"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Movement: "/>
+                                <TextBlock Text="("/>
+                                <TextBox Name="textBox_VCP_PortraitMovementMagnitudeX" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitMovementMagnitude_TextChanged"  TextAlignment="Right"/>
+                                <TextBlock Text=","/>
+                                <TextBox Name="textBox_VCP_PortraitMovementMagnitudeY" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitMovementMagnitude_TextChanged" TextAlignment="Right"/>
+                                <TextBlock Text=")"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Rotation: "/>
+                                <TextBox Name="textBox_VCP_PortraitRotationMagnitude" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitRotationMagnitude_TextChanged"  TextAlignment="Right"/>
+                            </StackPanel>
+                            <TextBlock Text="Moveement / rotation time..."/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Period: "/>
+                                <TextBox Name="textBox_VCP_PortraitMovementPeriod" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitMovementPeriod_TextChanged"  TextAlignment="Right"/>
+                                <TextBlock Text=", "/>
+                                <TextBox Name="textBox_VCP_PortraitRotationPeriod" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitRotationPeriod_TextChanged"  TextAlignment="Right"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Offset: "/>
+                                <TextBox Name="textBox_VCP_PortraitMovementOffset" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitMovementOffset_TextChanged"  TextAlignment="Right"/>
+                                <TextBlock Text=", "/>
+                                <TextBox Name="textBox_VCP_PortraitRotationOffset" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitRotationOffset_TextChanged"  TextAlignment="Right"/>
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Ordinal multipier: "/>
+                                <TextBox Name="textBox_VCP_PortraitOrdinalMoveTimeOffsetMultiplier" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitOrdinalMoveTimeOffsetMultiplier_TextChanged"  TextAlignment="Right"/>
+                                <TextBlock Text=", "/> 
+                                <TextBox Name="textBox_VCP_PortraitOrdinalRotTimeOffsetMultiplier" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitOrdinalRotTimeOffsetMultiplier_TextChanged"  TextAlignment="Right"/>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </GroupBox>
                 </StackPanel>
             </GroupBox>
         </StackPanel>

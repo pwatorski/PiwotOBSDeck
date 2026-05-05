@@ -104,6 +104,8 @@ namespace PiwotOBSDeck
             }
             
             IWavePlayer waveOutDevice = new WaveOut();
+            if (!File.Exists(TargetPath))
+                return false;
             AudioFileReader audioFileReader = new AudioFileReader(TargetPath);
             Duration = audioFileReader.TotalTime;
             audioFileReader.Dispose();
@@ -149,6 +151,7 @@ namespace PiwotOBSDeck
             waveOutDevice = new WaveOut();
             audioFileReader = new AudioFileReader(TargetPath);
             waveOutDevice.Init(audioFileReader);
+            waveOutDevice.Volume = 1;
             waveOutDevice.Play();
             Thread.Sleep((TimeSpan)Duration);
             waveOutDevice?.Stop();
