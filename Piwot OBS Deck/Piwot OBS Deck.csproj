@@ -12,6 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\GROUP_ICON.png" />
+    <None Remove="Resources\IMAGE_ICON.png" />
+    <None Remove="Resources\SCENE_ICON.png" />
+    <None Remove="Resources\TEXT_ICON.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Properties\OBSDeckIconOff.ico" />
   </ItemGroup>
 
@@ -43,6 +50,21 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\PiwotOBS\PiwotOBS\PiwotOBS.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\GROUP_ICON.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\IMAGE_ICON.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\SCENE_ICON.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\TEXT_ICON.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

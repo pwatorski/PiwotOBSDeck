@@ -6,6 +6,7 @@ using PiwotOBS.Structure;
 using PiwotOBS.Structure.Animations;
 using PiwotOBSDeck.Requests;
 using PiwotOBSDeck.Requests.Events;
+using PiwotOBSDeck.UI;
 using PiwotOBSDeck.VTuber;
 using PiwotOBSDeck.WebServices;
 using PiwotOBSDeck.WebServices.Events;
@@ -17,6 +18,7 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -230,7 +232,15 @@ namespace PiwotOBSDeck
             DonationDispatcher.OnDonationAdded += DonationDispatcher_OnDonationAdded;
             DonationDispatcher.OnDonationShown += DonationDispatcher_OnDonationShown;
             SteamAchievementDispatcher.Start();
+
+            treeDisplay.SelectionChanged += TreeDisplay_SelectionChanged;
            
+        }
+
+        private void TreeDisplay_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count == 0) return;
+            textBlock_scenes.Text = ((SceneNodeView)((ListBoxItem)e.AddedItems[0]).Content).Item.InputKind;
         }
 
         private void RequestRecService_OnVCPresenceUpdate(object? sender, OnVCPresenceUpdateEventArgs e)
@@ -446,12 +456,16 @@ namespace PiwotOBSDeck
 
                 DonationDispatcher.RefreshGoal();
                 Console.WriteLine("Dvd refreshed.");
+                var roots = new List<SceneItem>() { OBSStructure.RootScene };
+                treeDisplay.Initialize(roots);
+
 
             }));
             dispatcherOperation.Wait();
 
             
             Console.WriteLine("All OnConnect actions triggered.");
+            
         }
 
         private void ButtonConnect_Click(object sender, RoutedEventArgs e)

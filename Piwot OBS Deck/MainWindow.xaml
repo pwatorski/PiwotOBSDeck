@@ -1,9 +1,10 @@
-﻿<Window x:Class="PiwotOBSDeck.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PiwotOBSDeck"
+        xmlns:UI="clr-namespace:PiwotOBSDeck.UI" x:Class="PiwotOBSDeck.MainWindow"
         mc:Ignorable="d"
         Title="PiwotOBSDeck" Height="673" Width="881" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner">
     <Window.Resources>
@@ -111,40 +112,40 @@
 
 
         <StackPanel Grid.Column="1" Grid.RowSpan="2">
-            <GroupBox Name="groupBox_Connections"  Header="Connections" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" Width="200">
+            <GroupBox x:Name="groupBox_Connections"  Header="Connections" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" Width="200">
                 <StackPanel VerticalAlignment="Top">
-                    <GroupBox Name="groupBox_connectionsOBS" Header="Obs" VerticalAlignment="Top" Margin="2" BorderBrush="Gray" Background="LightGray">
+                    <GroupBox x:Name="groupBox_connectionsOBS" Header="Obs" VerticalAlignment="Top" Margin="2" BorderBrush="Gray" Background="LightGray">
                         <StackPanel>
-                            <Button Content="Connect to OBS" Margin="2" VerticalAlignment="Top" Height="27" Name="ButtonConnect" Click="ButtonConnect_Click" />
-                            <Button Content="Autoconnect" Margin="2" VerticalAlignment="Top" Height="27" Name="ButtonAutoConnect" Click="ButtonAutoConnect_Click"/>
+                            <Button Content="Connect to OBS" Margin="2" VerticalAlignment="Top" Height="27" x:Name="ButtonConnect" Click="ButtonConnect_Click" />
+                            <Button Content="Autoconnect" Margin="2" VerticalAlignment="Top" Height="27" x:Name="ButtonAutoConnect" Click="ButtonAutoConnect_Click"/>
                             <StackPanel Orientation="Horizontal" Margin="2">
                                 <TextBlock Text="Status: "/>
-                                <TextBlock Name="textBlock_OBSConnectionStatus" Text="disconnected"/>
+                                <TextBlock x:Name="textBlock_OBSConnectionStatus" Text="disconnected"/>
                             </StackPanel>
                             <Button Content="Dump scenes to file" Margin="2" VerticalAlignment="Top" Height="26" x:Name="ButtonDumpScenesToFile" Click="ButtonDumpScenesToFile_Click" Grid.ColumnSpan="2"/>
                         </StackPanel>
                     </GroupBox>
-                    <GroupBox Name="groupBox_connectionsDonations" Header="Donations" VerticalAlignment="Top" Margin="2" BorderBrush="Gray" Background="LightGray">
+                    <GroupBox x:Name="groupBox_connectionsDonations" Header="Donations" VerticalAlignment="Top" Margin="2" BorderBrush="Gray" Background="LightGray">
                         <StackPanel>
-                            <Button Name="button_toggleDonations" Content="Toggle connection" Margin="2" VerticalAlignment="Top" Grid.ColumnSpan="2" Click="button_toggleDonations_Click" Height="24"/>
+                            <Button x:Name="button_toggleDonations" Content="Toggle connection" Margin="2" VerticalAlignment="Top" Grid.ColumnSpan="2" Click="button_toggleDonations_Click" Height="24"/>
                             <StackPanel Orientation="Horizontal" Margin="2">
                                 <TextBlock Text="Status: "/>
-                                <TextBlock Name="textBlock_DonationConnectionStatus" Text="disconnected"/>
+                                <TextBlock x:Name="textBlock_DonationConnectionStatus" Text="disconnected"/>
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Name="groupBox_Trash"  Header="Trash" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" Width="200" IsEnabled="False">
+            <GroupBox x:Name="groupBox_Trash"  Header="Trash" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" Width="200" IsEnabled="False">
                 <StackPanel VerticalAlignment="Top">
-                    <Button Content="RALSEI" Margin="2" VerticalAlignment="Top" Height="24" Name="ButtonJumpscare_Copy" Click="ButtonJumpscare_Click"  FontSize="18" FontFamily="Chiller" FontWeight="Bold" Foreground="#FFCE1414" Grid.ColumnSpan="2"/>
-                    <Button Content="RALSEI2" Margin="2" VerticalAlignment="Top" Height="24" Name="ButtonJumpscare2" Click="ButtonJumpscare2_Click"  FontSize="18" FontFamily="Chiller" FontWeight="Bold" Foreground="#FFCC00BB" Grid.Column="1"/>
-                    <Button Content="Chirp! :D" Margin="2" VerticalAlignment="Top" Height="24" Name="ButtonChirp" Click="ButtonChirp_Click"/>
-                    <Button Content="DVD" Margin="2" VerticalAlignment="Top" Height="24" Name="ButtonDVD" Click="ButtonDVD_Click"/>
-                    <Button Content="No to se jeszcze poczeka" Margin="2" VerticalAlignment="Top" Height="24" Name="ButtonPoczeka_Shrek" Click="ButtonPoczeka_Shrek_Click"/>
+                    <Button Content="RALSEI" Margin="2" VerticalAlignment="Top" Height="24" x:Name="ButtonJumpscare_Copy" Click="ButtonJumpscare_Click"  FontSize="18" FontFamily="Chiller" FontWeight="Bold" Foreground="#FFCE1414" Grid.ColumnSpan="2"/>
+                    <Button Content="RALSEI2" Margin="2" VerticalAlignment="Top" Height="24" x:Name="ButtonJumpscare2" Click="ButtonJumpscare2_Click"  FontSize="18" FontFamily="Chiller" FontWeight="Bold" Foreground="#FFCC00BB" Grid.Column="1"/>
+                    <Button Content="Chirp! :D" Margin="2" VerticalAlignment="Top" Height="24" x:Name="ButtonChirp" Click="ButtonChirp_Click"/>
+                    <Button Content="DVD" Margin="2" VerticalAlignment="Top" Height="24" x:Name="ButtonDVD" Click="ButtonDVD_Click"/>
+                    <Button Content="No to se jeszcze poczeka" Margin="2" VerticalAlignment="Top" Height="24" x:Name="ButtonPoczeka_Shrek" Click="ButtonPoczeka_Shrek_Click"/>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="DVD speed: " Margin="2,2,0,1"/>
-                        <TextBox Name="textBox_dvdSpeed" MinWidth="30" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_dvdSpeed_TextChanged" TextAlignment="Right"/>
+                        <TextBox x:Name="textBox_dvdSpeed" MinWidth="30" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_dvdSpeed_TextChanged" TextAlignment="Right"/>
                         <TextBlock Text="px/frame" Margin="2,2,0,1"/>
                     </StackPanel>
                 </StackPanel>
@@ -152,11 +153,11 @@
 
         </StackPanel>
         <StackPanel Grid.Column="2" Grid.RowSpan="2">
-            <GroupBox Name="groupBox_VTuber" Header="V-Tuber" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" IsEnabled="False">
+            <GroupBox x:Name="groupBox_VTuber" Header="V-Tuber" Margin="2" VerticalAlignment="Top" HorizontalAlignment="Left" Width="200" IsEnabled="False">
                 <StackPanel VerticalAlignment="Top">
                     <GroupBox x:Name="groupBox_voiceMeter" Header="Voice"  BorderBrush="Gray" Background="LightGray">
                         <StackPanel>
-                            <Button Content="Toggle voicemeter" Margin="2" VerticalAlignment="Top" Height="27" Name="ButtonVoiceToggle" Click="ButtonVoiceToggle_Click" Grid.Column="1"/>
+                            <Button Content="Toggle voicemeter" Margin="2" VerticalAlignment="Top" Height="27" x:Name="ButtonVoiceToggle" Click="ButtonVoiceToggle_Click" Grid.Column="1"/>
                             <local:SerieDisplay Margin="2" x:Name="VoiceDisplay" BorderThickness="1,1,1,1" UpdateInterval="33" Grid.Column="1" Height="40" HorizontalAlignment="Stretch" Width="172">
                                 <local:SerieDisplay.BorderBrush>
                                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveCaptionTextColorKey}}"/>
@@ -171,17 +172,17 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Slider x:Name="slider_voiceVolume" Value="500" Maximum="1000" SmallChange="10" LargeChange="10" Grid.Column="0" ValueChanged="slider_voiceVolume_ValueChanged"/>
-                                <TextBlock x:Name="textBlock_voiceVolume" HorizontalAlignment="Right" Margin="0,0,4,0" Grid.Column="1">Vol: 100%</TextBlock>
+                                <TextBlock x:Name="textBlock_voiceVolume" HorizontalAlignment="Right" Margin="0,0,4,0" Grid.Column="1"><Run Text="Vol: 100%"/></TextBlock>
                             </Grid>
                         </StackPanel>
                     </GroupBox>
                     <GroupBox Header="Avatar">
                         <StackPanel>
-                            <GroupBox Header="Main" Name="groupBox_vtuberAvatarMain" BorderBrush="Gray" Background="LightGray">
+                            <GroupBox Header="Main" x:Name="groupBox_vtuberAvatarMain" BorderBrush="Gray" Background="LightGray">
                                 <StackPanel>
-                                    <Button Content="Toggle avatar" Margin="2" VerticalAlignment="Top" Height="27" Name="ButtonToggleAvatar" Click="ButtonToggleAvatar_Click" Grid.Column="1"/>
-                                    <Button Name="button_loadAvatar" Content="Load avatar" Margin="2" VerticalAlignment="Top" Height="24" Grid.Column="1" Click="button_loadAvatar_Click"/>
-                                    <Button Name="button_saveAvatar" Content="Save avatar" Margin="2" VerticalAlignment="Top" Height="24" Grid.Column="1" Click="button_saveAvatar_Click"/>
+                                    <Button Content="Toggle avatar" Margin="2" VerticalAlignment="Top" Height="27" x:Name="ButtonToggleAvatar" Click="ButtonToggleAvatar_Click" Grid.Column="1"/>
+                                    <Button x:Name="button_loadAvatar" Content="Load avatar" Margin="2" VerticalAlignment="Top" Height="24" Grid.Column="1" Click="button_loadAvatar_Click"/>
+                                    <Button x:Name="button_saveAvatar" Content="Save avatar" Margin="2" VerticalAlignment="Top" Height="24" Grid.Column="1" Click="button_saveAvatar_Click"/>
                                 </StackPanel>
                             </GroupBox>
                             <GroupBox Header="Faces">
@@ -189,7 +190,7 @@
                                     <Button x:Name="button_faceSelection" Content="Face selection" Height="24" Click="button_faceSelection_Click"/>
                                     <StackPanel x:Name="stackPanel_faceSelection" Visibility="Collapsed" >
                                         <TextBlock Text="Scene:" Margin="2,2,0,0"/>
-                                        <ComboBox Name="comboBox_avatarScenes"  Margin="2" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_avatarScenes_SelectionChanged"/>
+                                        <ComboBox x:Name="comboBox_avatarScenes"  Margin="2" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_avatarScenes_SelectionChanged"/>
                                         <StackPanel>
                                             <ListBox x:Name="listBox_faceSelection" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionMode="Multiple"/>
                                         </StackPanel>
@@ -212,11 +213,11 @@
                             </GroupBox>
                             <GroupBox Header="Beer">
                                 <StackPanel>
-                                    <Button Content="Once" Margin="2" VerticalAlignment="Top" Height="24" Name="ButtonBeer" Click="ButtonBeer_Click"/>
-                                    <Button Content="Toggle loop" Margin="2" VerticalAlignment="Top" Height="24" Name="ButtonBeer_Loop" Click="ButtonBeer_Loop_Click"/>
+                                    <Button Content="Once" Margin="2" VerticalAlignment="Top" Height="24" x:Name="ButtonBeer" Click="ButtonBeer_Click"/>
+                                    <Button Content="Toggle loop" Margin="2" VerticalAlignment="Top" Height="24" x:Name="ButtonBeer_Loop" Click="ButtonBeer_Loop_Click"/>
                                     <StackPanel Orientation="Horizontal" Margin="2">
                                         <TextBlock Text="Status: loop "/>
-                                        <TextBlock Name="textBlock_BeerLoopStatus" Text="off"/>
+                                        <TextBlock x:Name="textBlock_BeerLoopStatus" Text="off"/>
                                     </StackPanel>
                                 </StackPanel>
                             </GroupBox>
@@ -230,40 +231,46 @@
                 <StackPanel>
                     <GroupBox Header="Donation popup">
                         <StackPanel>
-                            <CheckBox Name="checkBox_enableMultilang" Content="Enable multi-lang" Margin="2" Checked="checkBox_enableMultilang_Checked"/>
+                            <CheckBox x:Name="checkBox_enableMultilang" Content="Enable multi-lang" Margin="2" Checked="checkBox_enableMultilang_Checked"/>
                             <StackPanel Orientation="Horizontal" Margin="2">
                                 <TextBlock Text="Donation in queue: "/>
-                                <TextBlock Name="textBlock_donationQueueValue" Text="0"/>
+                                <TextBlock x:Name="textBlock_donationQueueValue" Text="0"/>
                             </StackPanel>
-                            <Button Content="Pause queue" Margin="2" VerticalAlignment="Top" Height="24" Name="button_pauseDonations" Click="button_pauseDonations_Click"/>
-                            <Button Content="Skip" Margin="2" VerticalAlignment="Top" Height="24" Name="button_skipDonate" Click="button_skipDonate_Click"/>
+                            <Button Content="Pause queue" Margin="2" VerticalAlignment="Top" Height="24" x:Name="button_pauseDonations" Click="button_pauseDonations_Click"/>
+                            <Button Content="Skip" Margin="2" VerticalAlignment="Top" Height="24" x:Name="button_skipDonate" Click="button_skipDonate_Click"/>
                             <TextBlock Text="Scene:" Margin="2,2,2,0"/>
-                            <ComboBox Name="comboBox_donationScenes"  Margin="2,0,2,0" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_donationScenes_SelectionChanged"/>
+                            <ComboBox x:Name="comboBox_donationScenes"  Margin="2,0,2,0" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_donationScenes_SelectionChanged"/>
                             <TextBlock Text="Text:"  Margin="2,2,2,0"/>
-                            <ComboBox Name="comboBox_donationTexts" Margin="2,0,2,2" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_donationTexts_SelectionChanged"/>
+                            <ComboBox x:Name="comboBox_donationTexts" Margin="2,0,2,2" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_donationTexts_SelectionChanged"/>
                         </StackPanel>
                     </GroupBox>
                     <GroupBox Header="Goal">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Goal value: " Margin="2,2,0,1"/>
-                                <TextBox Name="textBox_goalTargetValue" MinWidth="30" VerticalAlignment="Bottom" Text="1000" KeyUp="textBox_goalValue_KeyUp" TextChanged="textBox_goalTargetValue_TextChanged" TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_goalTargetValue" MinWidth="30" VerticalAlignment="Bottom" Text="1000" KeyUp="textBox_goalValue_KeyUp" TextChanged="textBox_goalTargetValue_TextChanged" TextAlignment="Right"/>
                                 <TextBlock Text="zł" Margin="2,2,0,1"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Goal progress: " Margin="2,2,0,1"/>
-                                <TextBox Name="textBox_goalProgressValue" MinWidth="30" VerticalAlignment="Bottom" Text="0" KeyUp="textBox_goalProgress_KeyUp" TextChanged="textBox_goalProgressValue_TextChanged" TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_goalProgressValue" MinWidth="30" VerticalAlignment="Bottom" Text="0" KeyUp="textBox_goalProgress_KeyUp" TextChanged="textBox_goalProgressValue_TextChanged" TextAlignment="Right"/>
                                 <TextBlock Text="zł" Margin="2,2,0,1"/>
                             </StackPanel>
-                            <ProgressBar Name="progressBar_goal" Height="10" Margin="2" Maximum="100" Value="0" MouseMove="progressBar_goal_MouseMove" MouseLeftButtonDown="progressBar_goal_MouseLeftButtonDown"/>
+                            <ProgressBar x:Name="progressBar_goal" Height="10" Margin="2" Maximum="100" Value="0" MouseMove="progressBar_goal_MouseMove" MouseLeftButtonDown="progressBar_goal_MouseLeftButtonDown"/>
                             <TextBlock Text="Scene:" Margin="2,2,0,0"/>
-                            <ComboBox Name="comboBox_goalnScenes"  Margin="2,0,0,0" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_goalnScenes_SelectionChanged"/>
+                            <ComboBox x:Name="comboBox_goalnScenes"  Margin="2,0,0,0" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_goalnScenes_SelectionChanged"/>
                             <TextBlock Text="Text:"  Margin="2,2,0,0"/>
-                            <ComboBox Name="comboBox_goalTexts" Margin="2,0,0,0" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_goalTexts_SelectionChanged"/>
+                            <ComboBox x:Name="comboBox_goalTexts" Margin="2,0,0,0" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_goalTexts_SelectionChanged"/>
                             <TextBlock Text="Bar:"  Margin="2,2,0,0"/>
-                            <ComboBox Name="comboBox_goalBar" Margin="2,0,0,0" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_goalBar_SelectionChanged"/>
+                            <ComboBox x:Name="comboBox_goalBar" Margin="2,0,0,0" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_goalBar_SelectionChanged"/>
                         </StackPanel>
                     </GroupBox>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Scenes">
+                <StackPanel>
+                <TextBlock Name="textBlock_scenes" Text="Scenes:" Margin="2,2,2,0"/>
+                <UI:TreeDisplay x:Name="treeDisplay" MinHeight="100"/>
                 </StackPanel>
             </GroupBox>
 
@@ -285,7 +292,7 @@
                     <ComboBox x:Name="comboBox_achIcon1" Margin="2,0,2,2" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_achIcon1_SelectionChanged"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Name="groupBox_VCPresenceMain"  Header="VC Presence" HorizontalAlignment="Left" IsEnabled="False">
+            <GroupBox x:Name="groupBox_VCPresenceMain"  Header="VC Presence" HorizontalAlignment="Left" IsEnabled="False">
 
                 <StackPanel VerticalAlignment="Top" x:Name="stackPanel_VCPresence">
                     <StackPanel Orientation="Horizontal">
@@ -304,9 +311,9 @@
                         <TextBlock Text="Found portraits: " Margin="2,2,2,0"/>
                         <TextBlock Text="?" Margin="0,2,2,0" x:Name="textBlock_VCPresenceFoundPortraits"/>
                     </StackPanel>
-                    <Button Content="Enable" Margin="2" VerticalAlignment="Top" Height="24" Name="button_toggleVCPresence" Click="button_toggleVCPresence_Click" IsEnabled="True"/>
-                    <Button Content="Settings" Margin="2" VerticalAlignment="Top" Height="24" Name="button_toggleVCPresenceSettings" Click="button_toggleVCPresenceSettings_Click" IsEnabled="True"/>
-                    <GroupBox Name="groupBox_VCPresenceSetings"  Header="Settings" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" Width="200" d:Visibility="Visible" Visibility="Collapsed" >
+                    <Button Content="Enable" Margin="2" VerticalAlignment="Top" Height="24" x:Name="button_toggleVCPresence" Click="button_toggleVCPresence_Click" IsEnabled="True"/>
+                    <Button Content="Settings" Margin="2" VerticalAlignment="Top" Height="24" x:Name="button_toggleVCPresenceSettings" Click="button_toggleVCPresenceSettings_Click" IsEnabled="True"/>
+                    <GroupBox x:Name="groupBox_VCPresenceSetings"  Header="Settings" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2" Width="200" d:Visibility="Visible" Visibility="Collapsed" >
                         <StackPanel>
                             <TextBlock Text="Scene:" Margin="2,2,2,0"/>
                             <ComboBox x:Name="comboBox_vcPresenceScenes"  Margin="2,0,2,0" VerticalAlignment="Top" Height="22" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="comboBox_vcPresenceScenes_SelectionChanged" />
@@ -315,59 +322,59 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Portrait size: "/>
                                 <TextBlock Text="("/>
-                                <TextBox Name="textBox_VCP_PortraitSizeX" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitSize_TextChanged" TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitSizeX" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitSize_TextChanged" TextAlignment="Right"/>
                                 <TextBlock Text=","/>
-                                <TextBox Name="textBox_VCP_PortraitSizeY" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitSize_TextChanged" TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitSizeY" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitSize_TextChanged" TextAlignment="Right"/>
                                 <TextBlock Text=")"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Screen anchor: "/>
                                 <TextBlock Text="("/>
-                                <TextBox Name="textBox_VCP_PortraitScreenAnchorX" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitScreenAnchor_TextChanged"  TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitScreenAnchorX" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitScreenAnchor_TextChanged"  TextAlignment="Right"/>
                                 <TextBlock Text=","/>
-                                <TextBox Name="textBox_VCP_PortraitScreenAnchorY" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitScreenAnchor_TextChanged" TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitScreenAnchorY" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitScreenAnchor_TextChanged" TextAlignment="Right"/>
                                 <TextBlock Text=")"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Ordinal offset: "/>
                                 <TextBlock Text="("/>
-                                <TextBox Name="textBox_VCP_PortraitOrdinalOffsetX" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitOrdinalOffset_TextChanged"  TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitOrdinalOffsetX" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitOrdinalOffset_TextChanged"  TextAlignment="Right"/>
                                 <TextBlock Text=","/>
-                                <TextBox Name="textBox_VCP_PortraitOrdinalOffsetY" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitOrdinalOffset_TextChanged" TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitOrdinalOffsetY" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitOrdinalOffset_TextChanged" TextAlignment="Right"/>
                                 <TextBlock Text=")"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Movement: "/>
                                 <TextBlock Text="("/>
-                                <TextBox Name="textBox_VCP_PortraitMovementMagnitudeX" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitMovementMagnitude_TextChanged"  TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitMovementMagnitudeX" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitMovementMagnitude_TextChanged"  TextAlignment="Right"/>
                                 <TextBlock Text=","/>
-                                <TextBox Name="textBox_VCP_PortraitMovementMagnitudeY" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitMovementMagnitude_TextChanged" TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitMovementMagnitudeY" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitMovementMagnitude_TextChanged" TextAlignment="Right"/>
                                 <TextBlock Text=")"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Rotation: "/>
-                                <TextBox Name="textBox_VCP_PortraitRotationMagnitude" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitRotationMagnitude_TextChanged"  TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitRotationMagnitude" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitRotationMagnitude_TextChanged"  TextAlignment="Right"/>
                             </StackPanel>
                             <TextBlock Text="Moveement / rotation time..."/>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Period: "/>
-                                <TextBox Name="textBox_VCP_PortraitMovementPeriod" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitMovementPeriod_TextChanged"  TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitMovementPeriod" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitMovementPeriod_TextChanged"  TextAlignment="Right"/>
                                 <TextBlock Text=", "/>
-                                <TextBox Name="textBox_VCP_PortraitRotationPeriod" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitRotationPeriod_TextChanged"  TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitRotationPeriod" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitRotationPeriod_TextChanged"  TextAlignment="Right"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Offset: "/>
-                                <TextBox Name="textBox_VCP_PortraitMovementOffset" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitMovementOffset_TextChanged"  TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitMovementOffset" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitMovementOffset_TextChanged"  TextAlignment="Right"/>
                                 <TextBlock Text=", "/>
-                                <TextBox Name="textBox_VCP_PortraitRotationOffset" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitRotationOffset_TextChanged"  TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitRotationOffset" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitRotationOffset_TextChanged"  TextAlignment="Right"/>
                             </StackPanel>
-                            
+
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Ordinal multipier: "/>
-                                <TextBox Name="textBox_VCP_PortraitOrdinalMoveTimeOffsetMultiplier" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitOrdinalMoveTimeOffsetMultiplier_TextChanged"  TextAlignment="Right"/>
-                                <TextBlock Text=", "/> 
-                                <TextBox Name="textBox_VCP_PortraitOrdinalRotTimeOffsetMultiplier" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitOrdinalRotTimeOffsetMultiplier_TextChanged"  TextAlignment="Right"/>
+                                <TextBox x:Name="textBox_VCP_PortraitOrdinalMoveTimeOffsetMultiplier" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitOrdinalMoveTimeOffsetMultiplier_TextChanged"  TextAlignment="Right"/>
+                                <TextBlock Text=", "/>
+                                <TextBox x:Name="textBox_VCP_PortraitOrdinalRotTimeOffsetMultiplier" MinWidth="25" VerticalAlignment="Bottom" Text="10" KeyUp="textBox_KeyUp_ClearFocus" TextChanged="textBox_VCP_PortraitOrdinalRotTimeOffsetMultiplier_TextChanged"  TextAlignment="Right"/>
                             </StackPanel>
 
                         </StackPanel>
